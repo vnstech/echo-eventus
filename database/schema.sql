@@ -1,5 +1,7 @@
 SET foreign_key_checks = 0;
 
+DROP TABLE IF EXISTS users, events, users_events, participants;
+
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(100) NOT NULL,
