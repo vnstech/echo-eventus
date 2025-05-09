@@ -17,6 +17,12 @@ function down {
     docker compose down "${@}"
 }
 
+function remove-all {
+    docker rm -f $(docker ps -aq)
+    docker rmi -f $(docker images -aq)
+
+}
+
 function composer {
     docker run --rm --interactive \
         -e COMPOSER_CACHE_DIR="/app/.cache/composer" \
