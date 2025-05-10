@@ -8,6 +8,7 @@ CREATE TABLE users (
     email VARCHAR(100) NOT NULL UNIQUE,
     encrypted_password VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    avatar_name VARCHAR(60),
     is_admin BOOLEAN 
 );
 
