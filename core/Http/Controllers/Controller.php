@@ -8,8 +8,6 @@ use Lib\Authentication\Auth;
 
 class Controller
 {
-    protected string $layout = 'application';
-
     protected ?User $current_user = null;
 
     public function __construct()
@@ -29,12 +27,12 @@ class Controller
     /**
      * @param array<string, mixed> $data
      */
-    protected function render(string $view, array $data = []): void
+    protected function render(string $view, array $data = [], ?string $layout = 'application'): void
     {
         extract($data);
 
         $view = Constants::rootPath()->join('app/views/' . $view . '.phtml');
-        require Constants::rootPath()->join('app/views/layouts/' . $this->layout . '.phtml');
+        require Constants::rootPath()->join('app/views/layouts/' . $layout . '.phtml');
     }
 
 

@@ -13,21 +13,21 @@
     <link rel="stylesheet" href="/assets/css/application.css">
 </head>
 
-<body>
-
-    <header class="bg-primary text-white p-3 position-fixed top-0 w-100">
-        <h1><?= $title ?></h1>
-    </header>
-
-    <main class="container mt-5 pt-5">
-        <div class="row justify-content-center">
-            <section class="col-10 col-md-6 text-center">
-                <h1><?= $title ?></h1>
-            </section>
+<body class="m-0">
+    <main class="d-flex justify-content-center align-items-center vh-100">
+        <div class="row shadow-lg card-login h-75 w-75">
+            
+            <div class="col-6 text-center d-none d-md-flex flex-column justify-content-center align-items-center bg-primary-custom text-secondary-custom p-4 card-logo-login">
+                <img src="/assets/images/defaults/logo.png" alt="Logo" class="img-fluid mb-3" style="max-width: 150px;">
+            </div>
+            
+            <div class="col-6 p-4 d-flex flex-column justify-content-center align-items-center">
+                <?php require '_flash_message.phtml'; ?>
+                <h1 class="mb-3"> <?= $title ?> </h1>
+                <?php require $view; ?>
+            </div>
         </div>
     </main>
-
 </body>
-
 
 </html>
