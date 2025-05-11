@@ -8,7 +8,6 @@ use Lib\Authentication\Auth;
 
 class Controller
 {
-
     protected ?User $current_user = null;
 
     public function __construct()
