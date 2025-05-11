@@ -9,6 +9,6 @@ class HomeController extends Controller
     public function index(): void
     {
         $title = 'Home Page';
-        $this->render('home/index', compact('title'));
+        $this->render('visitor/home/index', compact('title'));
     }
 }
