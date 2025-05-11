@@ -14,5 +14,3 @@ Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::get('/events', [EventsController::class, 'index'])->name('events.index');
 
 Route::get('/admin', [AdminController::class, 'index'])->name('admin');
-
-
