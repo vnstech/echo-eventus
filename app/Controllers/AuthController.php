@@ -22,9 +22,9 @@ class AuthController extends Controller
     {
         $params = $request->getParam('user');
         if (!is_array($params)) {
-            var_dump($params); 
+            var_dump($params);
             echo "Parâmetros inválidos";
-            die(); 
+            die();
         }
         $user = User::findByEmail($params['email']);
 
