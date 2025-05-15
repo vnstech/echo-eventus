@@ -11,11 +11,12 @@ use Core\Database\ActiveRecord\Model;
  * @property string $email
  * @property string $encrypted_password
  * @property string $avatar_name
+ * @property boolean $is_admin
  */
 class User extends Model
 {
     protected static string $table = 'users';
-    protected static array $columns = ['name', 'email', 'encrypted_password', 'avatar_name'];
+    protected static array $columns = ['name', 'email', 'encrypted_password', 'avatar_name', "is_admin"];
 
     protected ?string $password = null;
     protected ?string $password_confirmation = null;
@@ -45,9 +46,17 @@ class User extends Model
     {
         return User::findBy(['email' => $email]);
     }
+    public static function getIsAdmin(boolean $user_id)
+    {
+        User::__get($user_id);
+    }
 
     public function __set(string $property, mixed $value): void
     {
+        if ($property === 'is_admin') {
+            $value = $value ? 1 : 0;
+        }
+
         parent::__set($property, $value);
 
         if (

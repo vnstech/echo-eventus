@@ -21,11 +21,6 @@ class AuthController extends Controller
     public function authenticate(Request $request): void
     {
         $params = $request->getParam('user');
-        if (!is_array($params)) {
-            var_dump($params);
-            echo "Parâmetros inválidos";
-            die();
-        }
         $user = User::findByEmail($params['email']);
 
         if ($user && $user->authenticate($params['password'])) {
@@ -41,6 +36,7 @@ class AuthController extends Controller
 
     public function destroy(): void
     {
+
         Auth::logout();
         FlashMessage::success('Logout realizado com sucesso!');
         $this->redirectTo(route('users.login'));
