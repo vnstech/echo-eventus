@@ -6,12 +6,13 @@ use Core\Http\Middleware\Middleware;
 use Core\Http\Request;
 use Lib\Authentication\Auth;
 use Lib\FlashMessage;
+use Models\User;
 
 class AdminAuthenticate implements Middleware
 {
     public function handle(Request $request): void
     {
-        if (!Auth::check()) {
+        if (!User::getIsAdmin()) {
             FlashMessage::danger('You do not have permission to access this page.');
             $this->redirectTo(route('users.login'));
         }
