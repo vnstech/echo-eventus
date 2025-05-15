@@ -9,7 +9,8 @@ use Core\Router\Route;
 // Authentication
 Route::get('/', [HomeController::class, 'index'])->name('root');
 
-Route::get('/login', [AuthController::class, 'login'])->name('login');
+Route::get('/login', [AuthController::class, 'new'])->name('users.login');
+Route::post('/login', [AuthController::class, 'authenticate'])->name('users.authenticate');
 
 Route::get('/events', [EventsController::class, 'index'])->name('events.index');
 
