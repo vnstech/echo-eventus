@@ -6,9 +6,9 @@ use App\Models\User;
 use Tests\Acceptance\BaseAcceptanceCest;
 use Tests\Support\AcceptanceTester;
 
-class LoginCest extends BaseAcceptanceCest
+class AdminCest extends BaseAcceptanceCest
 {
-    public function loginSuccessfully(AcceptanceTester $page): void
+    public function adminSuccessfully(AcceptanceTester $page): void
     {
         $user = new User([
             'name' => 'User 1',
@@ -26,23 +26,30 @@ class LoginCest extends BaseAcceptanceCest
         $page->click('Entrar');
 
         $page->see('Login realizado com sucesso!');
-        $page->seeInCurrentUrl('/events');
-
-        $page->click('Logout');
-        $page->see('Logout realizado com sucesso!');
-        $page->seeInCurrentUrl('/login');
+        $page->seeInCurrentUrl('/admin');
     }
 
-    public function loginUnsuccessfully(AcceptanceTester $page): void
+    public function adminUnsuccessfully(AcceptanceTester $page): void
     {
+        $user = new User([
+            'name' => 'User 1',
+            'email' => 'fulano1@example.com',
+            'password' => '123456',
+            'password_confirmation' => '123456'
+        ]);
+        $user->save();
+
         $page->amOnPage('/login');
 
-        $page->fillField('user[email]', 'fulano@example.com');
-        $page->fillField('user[password]', 'wrong_password');
+        $page->fillField('user[email]', $user->email);
+        $page->fillField('user[password]', $user->password);
 
         $page->click('Entrar');
 
-        $page->see('Email e/ou senha inválidos!');
+        $page->see('Login realizado com sucesso!');
+        $page->seeInCurrentUrl('/admin');
+
+        $page->see('You do not have permission to access this page.');
         $page->seeInCurrentUrl('/login');
     }
 }
