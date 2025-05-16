@@ -26,7 +26,7 @@ class AdminCest extends BaseAcceptanceCest
         $page->click('Entrar');
 
         $page->see('Login realizado com sucesso!');
-        $page->seeInCurrentUrl('/event');
+        $page->seeInCurrentUrl('/events');
 
         $page->amOnPage('/admin');
     }
@@ -48,10 +48,12 @@ class AdminCest extends BaseAcceptanceCest
 
         $page->click('Entrar');
 
+        $page->seeInCurrentUrl('/events');
         $page->see('Login realizado com sucesso!');
-        $page->seeInCurrentUrl('/admin');
 
-        $page->see('You do not have permission to access this page.');
+        $page->amOnPage('/admin');
+
         $page->seeInCurrentUrl('/login');
+        $page->see('You do not have permission to access this page.');
     }
 }
