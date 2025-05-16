@@ -26,7 +26,9 @@ class AdminCest extends BaseAcceptanceCest
         $page->click('Entrar');
 
         $page->see('Login realizado com sucesso!');
-        $page->seeInCurrentUrl('/admin');
+        $page->seeInCurrentUrl('/event');
+
+        $page->amOnPage('/admin');
     }
 
     public function adminUnsuccessfully(AcceptanceTester $page): void
