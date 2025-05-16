@@ -21,6 +21,17 @@ class Auth
         return null;
     }
 
+    public static function checkAdmin(): bool
+    {
+        $userId = $_SESSION["user"]["id"] ?? null;
+
+        if (isset($userId)) {
+            $id = $_SESSION['user']['id'];
+            return User::isAdminById($id);
+        }
+        return false;
+    }
+
     public static function check(): bool
     {
         return isset($_SESSION['user']['id']) && self::user() !== null;

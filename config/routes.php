@@ -8,9 +8,14 @@ use Core\Router\Route;
 
 // Authentication
 Route::get('/', [HomeController::class, 'index'])->name('root');
+Route::get('/login', [AuthController::class, 'new'])->name('users.login');
+Route::post('/login', [AuthController::class, 'authenticate'])->name('users.authenticate');
 
-Route::get('/login', [AuthController::class, 'login'])->name('login');
+Route::middleware('auth')->group(function () {
+    Route::get('/logout', [AuthController::class, 'destroy'])->name('users.logout');
+    Route::get('/events', [EventsController::class, 'index'])->name('events.index');
+});
 
-Route::get('/events', [EventsController::class, 'index'])->name('events.index');
-
-Route::get('/admin', [AdminController::class, 'index'])->name('admin');
+Route::middleware('admin')->group(function () {
+    Route::get('/admin', [AdminController::class, 'index'])->name('admin');
+});
