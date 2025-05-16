@@ -101,10 +101,3 @@ In this case you need to change the PHPSESSID value according to your session ID
 ```shell
 curl -H "Accept: application/json" -b "PHPSESSID=5f55f364a48d87fb7ef9f18425a8ae88" localhost/problems
 ```
-
-### Remove container and images:
-
-```
-./run remove-all
-
-asdfasd
