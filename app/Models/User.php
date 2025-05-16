@@ -11,11 +11,12 @@ use Core\Database\ActiveRecord\Model;
  * @property string $email
  * @property string $encrypted_password
  * @property string $avatar_name
+ * @property bool $is_admin
  */
 class User extends Model
 {
     protected static string $table = 'users';
-    protected static array $columns = ['name', 'email', 'encrypted_password', 'avatar_name'];
+    protected static array $columns = ['name', 'email', 'encrypted_password', 'avatar_name', 'is_admin'];
 
     protected ?string $password = null;
     protected ?string $password_confirmation = null;
@@ -34,20 +35,30 @@ class User extends Model
 
     public function authenticate(string $password): bool
     {
-        if ($this->encrypted_password == null) {
+        if ($this->encrypted_password === null) {
             return false;
         }
 
         return password_verify($password, $this->encrypted_password);
     }
 
-    public static function findByEmail(string $email): User | null
+    public static function findByEmail(string $email): ?User
     {
-        return User::findBy(['email' => $email]);
+        return self::findBy(['email' => $email]);
+    }
+
+    public static function isAdminById(int $userId): bool
+    {
+        $user = self::findById($userId);
+        return $user !== null && (bool)$user->is_admin;
     }
 
     public function __set(string $property, mixed $value): void
     {
+        if ($property === 'is_admin') {
+            $value = $value ? 1 : 0;
+        }
+
         parent::__set($property, $value);
 
         if (
