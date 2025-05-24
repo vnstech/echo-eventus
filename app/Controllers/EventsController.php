@@ -11,4 +11,10 @@ class EventsController extends Controller
         $title = 'Events';
         $this->render('user/events/index', compact('title'));
     }
+
+    public function new(): void
+    {
+        $title = 'Events new';
+        $this->render('user/events/new', compact('title'));
+    }
 }
