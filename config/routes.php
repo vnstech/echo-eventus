@@ -14,6 +14,7 @@ Route::post('/login', [AuthController::class, 'authenticate'])->name('users.auth
 Route::middleware('auth')->group(function () {
     Route::get('/logout', [AuthController::class, 'destroy'])->name('users.logout');
     Route::get('/events', [EventsController::class, 'index'])->name('events.index');
+    Route::get('/events/new', [EventsController::class, 'new']) ->name('events.new');
 });
 
 Route::middleware('admin')->group(function () {
