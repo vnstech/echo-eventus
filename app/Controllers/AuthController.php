@@ -26,19 +26,18 @@ class AuthController extends Controller
         if ($user && $user->authenticate($params['password'])) {
             Auth::login($user);
 
-            FlashMessage::success('Login realizado com sucesso!');
+            FlashMessage::success('Login successful!');
             $this->redirectTo(route('events.index'));
         } else {
-            FlashMessage::danger('Email e/ou senha inválidos!');
+            FlashMessage::danger('Invalid email and/or password!');
             $this->redirectTo(route('users.login'));
         }
     }
 
     public function destroy(): void
     {
-
         Auth::logout();
-        FlashMessage::success('Logout realizado com sucesso!');
+        FlashMessage::success('Logout successful!');
         $this->redirectTo(route('users.login'));
     }
 }
