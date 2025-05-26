@@ -93,5 +93,13 @@ function remove-all {
     docker volume rm -f $(docker volume ls -q)
 }
 
+function all-tests {
+    ./run test
+    ./run test:browser
+    ./run phpcs
+    ./run phpcbf
+    ./run phpstan
+}
+
 TIMEFORMAT=$'\nTask completed in %3lR'
 time ${@}

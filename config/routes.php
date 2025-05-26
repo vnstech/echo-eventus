@@ -15,6 +15,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/events', [EventsController::class, 'index'])->name('events.index');
     Route::get('/events/new', [EventsController::class, 'new']) ->name('events.new');
     Route::post('/events/create', [EventsController::class, 'create'])->name('events.create');
+    Route::get('/events/{event_id}', [EventsController::class, 'show'])->name('events.show');
 });
 
 Route::middleware('admin')->group(function () {

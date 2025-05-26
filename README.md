@@ -86,6 +86,18 @@ or
 
 Access [localhost](http://localhost)
 
+#### Browser tests:
+
+```
+./run test:browser
+```
+
+### Run all tests:
+
+```
+./run all-tests
+```
+
 ### API tests
 
 #### Unauthenticated route
@@ -110,9 +122,4 @@ curl -H "Accept: application/json" -b "PHPSESSID=5f55f364a48d87fb7ef9f18425a8ae8
 
 ### Other Tests:
 
-#### Browser tests:
-
-```
-./run test:browser
-```
 
