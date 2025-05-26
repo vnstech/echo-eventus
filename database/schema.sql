@@ -26,7 +26,7 @@ CREATE TABLE events (
     -- logo_name VARCHAR(60),
     -- background_name VARCHAR(60),
     category VARCHAR(100),
-    2fa_check BOOLEAN ,
+    two_fa_check_attendance BOOLEAN,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
