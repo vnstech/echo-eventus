@@ -1,89 +1,97 @@
 <div class="container py-5">
     <a href="/events" class="btn btn-outline-primary mb-4">
-        <i class="bi bi-arrow-left"></i> Voltar aos eventos
+        <i class="bi bi-arrow-left"></i> Back to Events
     </a>
 
     <div class="text-center mb-5">
-        <h1 class="fw-bold text-primary">Criar Novo Evento</h1>
-        <p class="text-muted">Preencha as informações abaixo para criar seu evento</p>
+        <h1 class="fw-bold text-primary">Create New Event</h1>
+        <p class="text-muted">Fill out the information below to create your event</p>
     </div>
 
-    <form method="POST" action="/eventos/salvar" enctype="multipart/form-data">
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-white fw-bold text-primary">
-            <i class="bi bi-calendar3 me-2"></i> Informações Básicas
-        </div>
-        <div class="card-body">
-        <div class="mb-3">
-            <label for="title" class="form-label">Título do Evento</label>
-            <input type="text" class="form-control" id="title" name="title" required placeholder="Ex: Conferência de Tecnologia 2024">
-        </div>
-
-        <div class="mb-3">
-            <label for="longDescription" class="form-label">Descrição Completa</label>
-            <textarea class="form-control" id="longDescription" name="longDescription" rows="4" required></textarea>
-        </div>
-
-        <div class="mb-3">
-            <label for="category" class="form-label">Categoria</label>
-            <select class="form-select" id="category" name="category" required>
-            <option selected disabled>Selecione uma categoria</option>
-            <option value="tecnologia">Tecnologia</option>
-            <option value="educacao">Educação</option>
-            </select>
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label">Imagem do Evento</label>
-            <input type="file" name="imagem" class="form-control">
-            <div class="form-text">PNG, JPG ou GIF até 10MB</div>
-        </div>
-        </div>
-    </div>
-
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-white fw-bold text-primary">
-            <i class="bi bi-clock me-2"></i> Data e Horário
-        </div>
-
-        <div class="card-body row g-3">
-            <div class="col-12">
-                <label for="date" class="form-label">Data de Início do Evento</label>
-                <input type="date" class="form-control" id="date" name="date" required>
+    <form method="POST" action="/events/create">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-white fw-bold text-primary">
+                <i class="bi bi-calendar3 me-2"></i> Basic Information
             </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="eventName" class="form-label">Event Name</label>
+                    <input type="text" class="form-control" id="eventName" name="event[name]" required placeholder="e.g., Tech Conference 2024">
+                </div>
 
-            <div class="col-md-6">
-                <label for="time" class="form-label">Horário de Início</label>
-                <input type="text" class="form-control" id="start-date" name="start-date" required placeholder="Ex: 09:00 - 18:00">
-            </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label">Full Description</label>
+                    <textarea class="form-control" id="description" name="event[description]" rows="6"></textarea>
+                </div>
 
-            <div class="col-md-6">
-                <label for="time" class="form-label">Horário do Fim</label>
-                <input type="text" class="form-control" id="start-date" name="start-date" required placeholder="Ex: 09:00 - 18:00">
+                <div class="mb-3">
+                    <label for="category" class="form-label">Category</label>
+                    <select class="form-select" id="category" name="event[category]" required>
+                        <option selected disabled>Select a category</option>
+                        <option value="">Empty</option>
+                    </select>
+                </div>
+
+                <!-- <div class="mb-3">
+                    <label class="form-label">Event Image</label>
+                    <input type="file" name="imagem" class="form-control">
+                    <div class="form-text">PNG, JPG or GIF up to 10MB</div>
+                </div> -->
             </div>
         </div>
-    </div>
 
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-white fw-bold text-primary">
-        <i class="bi bi-geo-alt me-2"></i> Localização
-        </div>
-        <div class="card-body">
-        <div class="mb-3">
-            <label for="location" class="form-label">Nome do Local</label>
-            <input type="text" class="form-control" id="location" name="location" required>
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-white fw-bold text-primary">
+                <i class="bi bi-clock me-2"></i> Date and Time
+            </div>
+
+            <div class="card-body row g-3">
+                <div class="col-12">
+                    <label for="datetime-local-start" class="form-label">Event Start Date</label>
+                    <input 
+                        type="datetime-local" 
+                        class="form-control" 
+                        id="datetime-local-start" 
+                        name="event[start_date]" 
+                        value="2025-06-01T09:00" 
+                        required
+                    >
+                </div>
+
+                <div class="col-12">
+                    <label for="datetime-local-finish" class="form-label">Event End Date</label>
+                    <input 
+                        type="datetime-local" 
+                        class="form-control" 
+                        id="datetime-local-finish" 
+                        name="event[finish_date]" 
+                        value="2025-06-01T18:00" 
+                        required
+                    >
+                </div>
+            </div>
+
         </div>
 
-        <div class="mb-3">
-            <label for="address" class="form-label">Endereço Completo</label>
-            <input type="text" class="form-control" id="address" name="address" required placeholder="Rua, número, bairro, cidade - estado">
-        </div>
-        </div>
-    </div>
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-white fw-bold text-primary">
+                <i class="bi bi-geo-alt me-2"></i> Location
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="location" class="form-label">Location Name</label>
+                    <input type="text" class="form-control" id="location" name="event[location_name]" required>
+                </div>
 
-    <div class="d-flex justify-content-end gap-2">
-        <button type="button" class="btn btn-outline-secondary">Salvar Rascunho</button>
-        <button type="submit" class="btn btn-primary">Publicar Evento</button>
-    </div>
+                <div class="mb-3">
+                    <label for="address" class="form-label">Full Address</label>
+                    <input type="text" class="form-control" id="address" name="event[address]" required placeholder="Street, number, neighborhood, city - state">
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-center gap-2">
+            <button type="submit" class="btn btn-primary">Publish Event</button>
+        </div>
     </form>
 </div>

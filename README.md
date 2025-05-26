@@ -102,7 +102,17 @@ In this case you need to change the PHPSESSID value according to your session ID
 curl -H "Accept: application/json" -b "PHPSESSID=5f55f364a48d87fb7ef9f18425a8ae88" localhost/problems
 ```
 
-### Remove container and images:
+#### Remove all container images volumes from your computer and also vendor
 
 ```
 ./run remove-all
+```
+
+### Other Tests:
+
+#### Browser tests:
+
+```
+./run test:browser
+```
+

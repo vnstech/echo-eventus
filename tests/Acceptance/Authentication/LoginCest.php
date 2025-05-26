@@ -23,13 +23,13 @@ class LoginCest extends BaseAcceptanceCest
         $page->fillField('user[email]', $user->email);
         $page->fillField('user[password]', $user->password);
 
-        $page->click('Entrar');
+        $page->click('Entry');
 
-        $page->see('Login realizado com sucesso!');
+        $page->see('Login successful!');
         $page->seeInCurrentUrl('/events');
 
         $page->click('Logout');
-        $page->see('Logout realizado com sucesso!');
+        $page->see('Logout successful!');
         $page->seeInCurrentUrl('/login');
     }
 
@@ -40,9 +40,9 @@ class LoginCest extends BaseAcceptanceCest
         $page->fillField('user[email]', 'fulano@example.com');
         $page->fillField('user[password]', 'wrong_password');
 
-        $page->click('Entrar');
+        $page->click('Entry');
 
-        $page->see('Email e/ou senha inválidos!');
+        $page->see('Invalid email and/or password!');
         $page->seeInCurrentUrl('/login');
     }
 }
