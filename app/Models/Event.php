@@ -22,7 +22,18 @@ use Core\Database\ActiveRecord\BelongsTo;
 class Event extends Model
 {
     protected static string $table = 'events';
-    protected static array $columns = ['user_id', 'status', 'name', 'description', 'start_date', 'finish_date', 'location_name', 'address', 'category', 'two_fa_check_attendance'];
+    protected static array $columns = [
+        'user_id',
+        'status',
+        'name',
+        'description',
+        'start_date',
+        'finish_date',
+        'location_name',
+        'address',
+        'category',
+        'two_fa_check_attendance'
+    ];
 
     protected ?string $password = null;
     protected ?string $password_confirmation = null;
@@ -39,22 +50,11 @@ class Event extends Model
         if ($property === 'two_fa_check_attendance') {
             $value = $value ? 1 : 0;
         }
-
         parent::__set($property, $value);
-    }
-
-    public function authenticate(string $password): bool
-    {
-        if ($this->encrypted_password === null) {
-            return false;
-        }
-
-        return password_verify($password, $this->encrypted_password);
     }
 
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
     }
-
 }

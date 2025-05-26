@@ -4,7 +4,6 @@ use App\Controllers\HomeController;
 use App\Controllers\AuthController;
 use App\Controllers\EventsController;
 use App\Controllers\AdminController;
-
 use Core\Router\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('root');

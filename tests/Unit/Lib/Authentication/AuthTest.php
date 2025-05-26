@@ -13,7 +13,6 @@ class AuthTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $_SESSION = [];
         $this->user = new User([
             'name' => 'User 1',
             'email' => 'fulano@example.com',
@@ -26,7 +25,6 @@ class AuthTest extends TestCase
     public function tearDown(): void
     {
         parent::setUp();
-        $_SESSION = [];
     }
 
     public function test_login(): void

@@ -26,10 +26,10 @@ class EventsController extends Controller
         error_log(print_r($params, true));
         $event = $this->current_user->event()->new($params['event']);
 
-        if($event->save()) {
+        if ($event->save()) {
             FlashMessage::success('Event created successfully!');
             $this->redirectTo(route('events.index'));
-        }else{ 
+        } else {
             FlashMessage::danger('There is incorrect data! Please check!');
             $title = 'Events new';
             $this->render('user/events/new', compact('title'));
