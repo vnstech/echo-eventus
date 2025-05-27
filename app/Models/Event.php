@@ -50,6 +50,12 @@ class Event extends Model
         if ($property === 'two_fa_check_attendance') {
             $value = $value ? 1 : 0;
         }
+        if ($property === 'category') {
+            $value = $value ? $value : null;
+        }
+        if ($property === 'status') {
+            $value = "upcoming";
+        }
         parent::__set($property, $value);
     }
 
