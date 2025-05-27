@@ -6,15 +6,47 @@ use App\Models\Event;
 use Core\Http\Controllers\Controller;
 use Core\Http\Request;
 use Lib\FlashMessage;
+use Lib\Paginator;
 
 class EventsController extends Controller
 {
     public function index(): void
     {
         $title = 'Events';
-        $events = $this->current_user->event()->get();
-        $this->render('user/events/index', compact('title', 'events'));
+
+        $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int) $_GET['page'] : 1;
+        if ($page < 1) {
+            $page = 1;
+        }
+
+        $perPage = 12;
+
+        $paginator = new Paginator(
+            class: Event::class,
+            page: $page,
+            per_page: $perPage,
+            table: 'events',
+            attributes: [
+                'name',
+                'start_date',
+                'finish_date',
+                'user_id',
+                'status',
+                'description',
+                'location_name',
+                'address',
+                'category',
+                'two_fa_check_attendance'
+            ],
+            conditions: ['user_id' => $this->current_user->id],
+            route: 'events.index'
+        );
+
+        $events = $paginator->registers();
+
+        $this->render('user/events/index', compact('title', 'events', 'paginator'));
     }
+
 
     public function new(Request $request): void
     {

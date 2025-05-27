@@ -9,7 +9,7 @@ use Tests\Support\AcceptanceTester;
 
 class EventCest extends BaseAcceptanceCest
 {
-    public function createSuccesfully(AcceptanceTester $page): void
+    public function seeEvent(AcceptanceTester $page): void
     {
         $user = new User([
             'name' => 'User 1',
@@ -20,7 +20,7 @@ class EventCest extends BaseAcceptanceCest
         $user->save();
 
         $event = new Event([
-            'name' => 'Test Event',
+            'name' => "Test Event",
             'start_date' => '2025-06-01T09:00',
             'finish_date' => '2025-06-01T18:00',
             'user_id' => $user->id,
@@ -28,16 +28,91 @@ class EventCest extends BaseAcceptanceCest
             'description' => 'Description for event test',
             'location_name' => 'TEST',
             'address' => 'Test street 1232',
-            'category' => null,
+            'category' => '',
             'two_fa_check_attendance' => false
         ]);
 
         $event->save();
-
         $page->login($user->email, $user->password);
-
         $page->amOnPage('/events');
+
         $page->see($event->name);
     }
 
+    public function seeMultipleEventsPaginated(AcceptanceTester $page): void
+    {
+        $user = new User([
+            'name' => 'User 1',
+            'email' => 'fulano@example.com',
+            'password' => '123456',
+            'password_confirmation' => '123456'
+        ]);
+        $user->save();
+
+        $events = [];
+        for ($i = 1; $i <= 40; $i++) {
+            $event = new Event([
+                'name' => "Test Event {$i}",
+                'start_date' => '2025-06-01T09:00',
+                'finish_date' => '2025-06-01T18:00',
+                'user_id' => $user->id,
+                'status' => 'upcoming',
+                'description' => "Description for event test {$i}",
+                'location_name' => "TEST Location {$i}",
+                'address' => "Test street 123{$i}",
+                'category' => '',
+                'two_fa_check_attendance' => false
+            ]);
+            $event->save();
+            $events[] = $event;
+        }
+
+        $page->login($user->email, $user->password);
+
+        $perPage = 12;
+        $totalPages = ceil(count($events) / $perPage);
+
+        for ($currentPage = 1; $currentPage <= $totalPages; $currentPage++) {
+            $page->amOnPage("/events?page={$currentPage}");
+
+            $start = ($currentPage - 1) * $perPage;
+            $end = min($start + $perPage, count($events));
+
+            for ($i = $start; $i < $end; $i++) {
+                $page->see($events[$i]->name);
+            }
+        }
+    }
+
+    public function notSeeEvent(AcceptanceTester $page): void
+    {
+        $user = new User([
+            'name' => 'User 1',
+            'email' => 'fulano@example.com',
+            'password' => '123456',
+            'password_confirmation' => '123456'
+        ]);
+        $user->save();
+
+        $eventData = [
+            'name' => null, //invalid
+            'start_date' => '2025-06-01T09:00',
+            'finish_date' => '2025-06-01T18:00',
+            'user_id' => $user->id,
+            'status' => 'upcoming',
+            'description' => 'Description for event test',
+            'location_name' => 'TEST',
+            'address' => 'Test street 1232',
+            'category' => '',
+            'two_fa_check_attendance' => false
+        ];
+
+        $event = new Event($eventData);
+
+        $event->save();
+        $page->login($user->email, $user->password);
+        $page->amOnPage('/events');
+
+        $page->dontSee($eventData["description"]);
+    }
 }
