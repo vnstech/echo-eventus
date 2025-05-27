@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Acceptance\home;
+namespace Tests\Acceptance\Home;
 
 use Tests\Acceptance\BaseAcceptanceCest;
 use Tests\Support\AcceptanceTester;
