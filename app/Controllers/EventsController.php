@@ -108,9 +108,12 @@ class EventsController extends Controller
             return;
         }
 
-        $event->name = $params['name'];
+        $result = $event->update(['name' => $params['name']]);
 
-        if ($event->save()) {
+        $title = 'Events Edit';
+        $this->render('/user/events/edit', compact('title', 'event'));
+
+        if ($result) {
             FlashMessage::success('Event updated successfully!');
             $this->redirectTo(route('events.index'));
         } else {
