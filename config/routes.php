@@ -16,8 +16,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/events/new', [EventsController::class, 'new']) ->name('events.new');
     Route::post('/events/create', [EventsController::class, 'create'])->name('events.create');
     Route::get('/events/{event_id}', [EventsController::class, 'show'])->name('events.show');
-    Route::get('/events/{event_id}/edit', [EventsController::class, 'edit'])->name('event.edit');
-    Route::put('/events/{events_id}', [EventsController::class, 'update'])->name('event.update');
+    Route::get('/events/{event_id}/edit', [EventsController::class, 'edit'])->name('events.edit');
+    Route::put('/events/{event_id}', [EventsController::class, 'update'])->name('events.update');
+    Route::delete('/event/{event_id}', [EventsController::class, 'destroy'])->name('events.destroy');
 });
 
 Route::middleware('admin')->group(function () {

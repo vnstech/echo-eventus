@@ -122,4 +122,16 @@ class EventsController extends Controller
             $this->render('/user/events/edit', compact('title', 'event'));
         }
     }
+
+    public function destroy(Request $request): void
+    {
+        $params = $request->getParams();
+
+        $event = $this->current_user->event()->findById($params['event_id']);
+        $event->destroy();
+
+        FlashMessage::success('Evento removido com sucesso!');
+        $this->redirectTo(route('events.index'));
+    }
+
 }
