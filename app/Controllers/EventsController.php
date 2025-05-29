@@ -85,4 +85,41 @@ class EventsController extends Controller
             $this->render('user/events/error', compact('title'));
         }
     }
+
+    public function edit(Request $request): void
+    {
+        $params = $request->getParams();
+        $title = 'Events Edit';
+        $event = $this->current_user->event()->findById($params['event_id']);
+
+        $this->render('/user/events/edit', compact('title', 'event'));
+    }
+
+    public function update(Request $request): void
+    {
+        $params = $request->getParams();
+
+        /** @var Event|null $event */
+        $event = $this->current_user->event()->findById($params['event']);
+
+        if (!$event) {
+            FlashMessage::danger('Event not found!');
+            $this->redirectTo(route('events.index'));
+            return;
+        }
+
+        $result = $event->update(['name' => $params['name']]);
+
+        $title = 'Events Edit';
+        $this->render('/user/events/edit', compact('title', 'event'));
+
+        if ($result) {
+            FlashMessage::success('Event updated successfully!');
+            $this->redirectTo(route('events.index'));
+        } else {
+            FlashMessage::danger('Error updating event. Please check the data!');
+            $title = 'Events Edit';
+            $this->render('/user/events/edit', compact('title', 'event'));
+        }
+    }
 }
