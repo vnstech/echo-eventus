@@ -133,5 +133,4 @@ class EventsController extends Controller
         FlashMessage::success('Evento removido com sucesso!');
         $this->redirectTo(route('events.index'));
     }
-
 }
