@@ -1,8 +1,13 @@
 <div class="container py-5">
 
-    <a href="/events" class="btn btn-outline-primary mb-4">
-        <i class="bi bi-arrow-left"></i> Voltar para Eventos
-    </a>
+    <div class="position-relative text-center mb-5">
+        <a href="/events" class="btn btn-outline-primary position-absolute start-0 top-0">
+            <i class="bi bi-arrow-left"></i> Back to Events
+        </a>
+
+        <h1 class="fw-bold text-primary"><?= $event->name ?> Details</h1>
+        <p class="text-muted mb-0">All the information you need about this event</p>
+    </div>
 
     <div class="card shadow-sm mb-4">
         <div class="card-header bg-white fw-bold text-primary d-flex justify-content-between align-items-center">
@@ -19,13 +24,13 @@
             </div>
         </div>
         <div class="card-body">
-            <p class="text-muted">Detalhes do evento estão listados abaixo.</p>
+            <p class="text-muted">Event details are listed below.</p>
             <ul class="list-unstyled">
-                <li><strong>Descrição:</strong> <?= $event->description ?></li>
-                <li><strong>Categoria:</strong> <?= $event->category ?></li>
-                <li><strong>Início:</strong> <?= $event->start_date ?></li>
-                <li><strong>Fim:</strong> <?= $event->finish_date ?></li>
-                <li><strong>Local:</strong> <?= $event->location_name ?> - <?= $event->address ?></li>
+                <li><strong>Description:</strong> <?= $event->description ?></li>
+                <li><strong>Category:</strong> <?= $event->category ?></li>
+                <li><strong>Start:</strong> <?= $event->start_date ?></li>
+                <li><strong>End:</strong> <?= $event->finish_date ?></li>
+                <li><strong>Location:</strong> <?= $event->location_name ?> - <?= $event->address ?></li>
             </ul>
         </div>
     </div>
@@ -35,19 +40,19 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title fw-bold text-danger" id="deleteModalLabel">
-                        <i class="bi bi-exclamation-triangle-fill me-2"></i>Confirmar Exclusão
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>Confirm Deletion
                     </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p>Você tem certeza de que deseja excluir este evento?</p>
-                    <p class="text-danger-custom">Esta ação não pode ser desfeita!</p>
+                    <p>Are you sure you want to delete this event?</p>
+                    <p class="text-danger-custom">This action cannot be undone!</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                     <form action="<?= route('events.destroy', ['event_id' => $event->id]) ?>" method="POST">
                         <input type="hidden" name="_method" value="DELETE">
-                        <button type="submit" class="btn btn-danger">Excluir Evento</button>
+                        <button type="submit" class="btn btn-danger">Delete Event</button>
                     </form>
                 </div>
             </div>

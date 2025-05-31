@@ -1,5 +1,9 @@
+header {
+  z-index:1050;
+}
 body {
   margin-top: 60px;
+  background-color: #f9f9fb;
 }
 
 #main-content {
@@ -26,4 +30,26 @@ nav.navbar {
 .avatar {
   width: 315px;
   height: 315px;
+}
+
+.hover-shadow:hover {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    transform: translateY(-4px);
+    transition: all 0.2s ease-in-out;
+}
+
+.transition {
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-header-outline {
+    background-color: transparent;
+    color: white;
+    border: 1px solid white;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-header-outline:hover {
+    background-color: white;
+    color: #0d6efd;
 }
