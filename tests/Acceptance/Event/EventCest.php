@@ -186,4 +186,40 @@ class EventCest extends BaseAcceptanceCest
 
         $page->seeCurrentUrlEquals("/events/{$event->id}");
     }
+
+    public function deleteEventSuccessfully(AcceptanceTester $page): void
+    {
+        $user = new User([
+            'name' => 'User 1',
+            'email' => 'fulano@example.com',
+            'password' => '123456',
+            'password_confirmation' => '123456'
+        ]);
+        $user->save();
+
+        $event = new Event([
+            'name' => "Event To Be Deleted",
+            'start_date' => '2025-06-01T09:00',
+            'finish_date' => '2025-06-01T18:00',
+            'user_id' => $user->id,
+            'status' => 'upcoming',
+            'description' => 'This event will be deleted in the test',
+            'location_name' => 'Test Location',
+            'address' => 'Test Address',
+            'category' => '',
+            'two_fa_check_attendance' => false
+        ]);
+        $event->save();
+
+        $page->login($user->email, $user->password);
+        $page->amOnPage("/events/{$event->id}");
+
+        $page->click('button[data-bs-target="#deleteModal"]');
+        $page->waitForElementVisible('#deleteModal form button[type=submit]', 5);
+        $page->click('#deleteModal form button[type=submit]');
+
+        $page->seeCurrentUrlEquals('/events');
+
+        $page->dontSee($event->name);
+    }
 }
