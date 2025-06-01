@@ -51,7 +51,7 @@ class EventsController extends Controller
     public function new(Request $request): void
     {
         $title = 'Events new';
-        $this->current_user->event()->new();
+        $this->current_user->events()->new();
         $this->render('user/events/new', compact('title'));
     }
 
@@ -59,7 +59,7 @@ class EventsController extends Controller
     {
         $params = $request->getParams();
         error_log(print_r($params, true));
-        $event = $this->current_user->event()->new($params['event']);
+        $event = $this->current_user->events()->new($params['event']);
 
         if ($event->save()) {
             FlashMessage::success('Event created successfully!');
@@ -75,7 +75,7 @@ class EventsController extends Controller
     {
         $params = $request->getParams();
         /** @var Event|null $event */
-        $event = $this->current_user->event()->findById($params['event_id']);
+        $event = $this->current_user->events()->findById($params['event_id']);
 
         if ($event) {
             $title = "Event Painel";
@@ -90,7 +90,7 @@ class EventsController extends Controller
     {
         $params = $request->getParams();
         $title = 'Events Edit';
-        $event = $this->current_user->event()->findById($params['event_id']);
+        $event = $this->current_user->events()->findById($params['event_id']);
 
         $this->render('/user/events/edit', compact('title', 'event'));
     }
@@ -100,7 +100,7 @@ class EventsController extends Controller
         $params = $request->getParams();
 
         /** @var Event|null $event */
-        $event = $this->current_user->event()->findById($params['event']);
+        $event = $this->current_user->events()->findById($params['event']);
 
         if (!$event) {
             FlashMessage::danger('Event not found!');
@@ -124,7 +124,7 @@ class EventsController extends Controller
     {
         $params = $request->getParams();
 
-        $event = $this->current_user->event()->findById($params['event_id']);
+        $event = $this->current_user->events()->findById($params['event_id']);
         $event->destroy();
 
         FlashMessage::success('Evento removido com sucesso!');
