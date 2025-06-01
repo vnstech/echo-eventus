@@ -6,7 +6,6 @@ use App\Controllers\EventsController;
 use App\Controllers\AdminController;
 use Core\Router\Route;
 
-// Authentication
 Route::get('/', [HomeController::class, 'index'])->name('root');
 Route::get('/login', [AuthController::class, 'new'])->name('users.login');
 Route::post('/login', [AuthController::class, 'authenticate'])->name('users.authenticate');
@@ -14,6 +13,12 @@ Route::post('/login', [AuthController::class, 'authenticate'])->name('users.auth
 Route::middleware('auth')->group(function () {
     Route::get('/logout', [AuthController::class, 'destroy'])->name('users.logout');
     Route::get('/events', [EventsController::class, 'index'])->name('events.index');
+    Route::get('/events/new', [EventsController::class, 'new']) ->name('events.new');
+    Route::post('/events/create', [EventsController::class, 'create'])->name('events.create');
+    Route::get('/events/{event_id}', [EventsController::class, 'show'])->name('events.show');
+    Route::get('/events/{event_id}/edit', [EventsController::class, 'edit'])->name('events.edit');
+    Route::put('/events/{event_id}', [EventsController::class, 'update'])->name('events.update');
+    Route::delete('/event/{event_id}', [EventsController::class, 'destroy'])->name('events.destroy');
 });
 
 Route::middleware('admin')->group(function () {

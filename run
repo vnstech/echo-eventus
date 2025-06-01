@@ -17,12 +17,6 @@ function down {
     docker compose down "${@}"
 }
 
-function remove-all {
-    docker rm -f $(docker ps -aq)
-    docker rmi -f $(docker images -aq)
-
-}
-
 function composer {
     docker run --rm --interactive \
         -e COMPOSER_CACHE_DIR="/app/.cache/composer" \
@@ -90,6 +84,21 @@ function db:reset {
 
 function db:populate {
     docker compose exec php php database/Populate/populate.php
+}
+
+function remove-all {
+    rm -rf vendor
+    docker rm -f $(docker ps -aq)
+    docker rmi -f $(docker images -aq)
+    docker volume rm -f $(docker volume ls -q)
+}
+
+function all-tests {
+    ./run test
+    ./run test:browser
+    ./run phpcs
+    ./run phpcbf
+    ./run phpstan
 }
 
 TIMEFORMAT=$'\nTask completed in %3lR'

@@ -15,7 +15,7 @@ class LoginHelper extends Module
         $page->amOnPage('/login');
         $page->fillField('user[email]', $username);
         $page->fillField('user[password]', $password);
-        $page->click('Entrar');
+        $page->click('Entry');
     }
 
     public function logout(): void
@@ -23,6 +23,6 @@ class LoginHelper extends Module
         /** @var \Tests\Support\AcceptanceTester $page */
         $page = $this->getModule('WebDriver');
         $page->click('fulano@example.com');
-        $page->click('Sair');
+        $page->click('Entry');
     }
 }

@@ -14,19 +14,20 @@ CREATE TABLE users (
 
 CREATE TABLE events (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    owner_id INT NOT NULL,
+    user_id INT NOT NULL,
     status VARCHAR(20),
     name VARCHAR(100) NOT NULL,
     description VARCHAR(300),
-    start_date DATETIME,
+    start_date DATETIME NOT NULL,
     finish_date DATETIME,
-    location VARCHAR(100),
+    location_name VARCHAR(100),
+    address VARCHAR(200),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    logo_name VARCHAR(60),
-    background_name VARCHAR(60),
+    -- logo_name VARCHAR(60),
+    -- background_name VARCHAR(60),
     category VARCHAR(100),
-    2fa_check BOOLEAN ,
-    FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE
+    two_fa_check_attendance BOOLEAN,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 CREATE TABLE users_events (

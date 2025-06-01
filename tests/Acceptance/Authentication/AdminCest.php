@@ -23,9 +23,9 @@ class AdminCest extends BaseAcceptanceCest
         $page->fillField('user[email]', $user->email);
         $page->fillField('user[password]', $user->password);
 
-        $page->click('Entrar');
+        $page->click('Entry');
 
-        $page->see('Login realizado com sucesso!');
+        $page->see('Login successful!');
         $page->seeInCurrentUrl('/events');
 
         $page->amOnPage('/admin');
@@ -46,10 +46,10 @@ class AdminCest extends BaseAcceptanceCest
         $page->fillField('user[email]', $user->email);
         $page->fillField('user[password]', $user->password);
 
-        $page->click('Entrar');
+        $page->click('Entry');
 
         $page->seeInCurrentUrl('/events');
-        $page->see('Login realizado com sucesso!');
+        $page->see('Login successful!');
 
         $page->amOnPage('/admin');
 
