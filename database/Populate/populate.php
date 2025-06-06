@@ -9,4 +9,4 @@ use Database\Populate\EventsPopulate;
 Database::migrate();
 
 UsersPopulate::populate();
-EventsPopulate::populate();
+// EventsPopulate::populate();

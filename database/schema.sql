@@ -14,7 +14,7 @@ CREATE TABLE users (
 
 CREATE TABLE events (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
+    owner_id INT NOT NULL,
     status VARCHAR(20),
     name VARCHAR(100) NOT NULL,
     description VARCHAR(300),
@@ -27,16 +27,15 @@ CREATE TABLE events (
     -- background_name VARCHAR(60),
     category VARCHAR(100),
     two_fa_check_attendance BOOLEAN,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 CREATE TABLE users_events (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    users_id INT NOT NULL,
-    events_id INT NOT NULL,
-    UNIQUE KEY unique_user_event (users_id, events_id),
-    FOREIGN KEY (users_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (events_id) REFERENCES events(id) ON DELETE CASCADE
+    user_id INT NOT NULL,
+    event_id INT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE
 );
 
 CREATE TABLE participants (
