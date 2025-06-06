@@ -34,7 +34,6 @@ CREATE TABLE users_events (
     id INT AUTO_INCREMENT PRIMARY KEY,
     users_id INT NOT NULL,
     events_id INT NOT NULL,
-    UNIQUE KEY unique_user_event (users_id, events_id),
     FOREIGN KEY (users_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (events_id) REFERENCES events(id) ON DELETE CASCADE
 );

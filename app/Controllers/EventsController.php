@@ -7,6 +7,7 @@ use Core\Http\Controllers\Controller;
 use Core\Http\Request;
 use Lib\FlashMessage;
 use Lib\Paginator;
+use App\Models\UserEvent;
 
 class EventsController extends Controller
 {
@@ -51,19 +52,29 @@ class EventsController extends Controller
     public function new(Request $request): void
     {
         $title = 'Events new';
-        $this->current_user->events()->new();
+        $this->current_user->usersEvents()->new();
         $this->render('user/events/new', compact('title'));
     }
 
     public function create(Request $request): void
     {
         $params = $request->getParams();
-        error_log(print_r($params, true));
-        $event = $this->current_user->events()->new($params['event']);
+        
+
+        $event = new Event($params);
 
         if ($event->save()) {
-            FlashMessage::success('Event created successfully!');
-            $this->redirectTo(route('events.index'));
+            $usersEvents = new UserEvent(['users_id' => $this->current_user->id, 'events_id' => $event->id]);
+
+            if ($usersEvents->save()) {
+                FlashMessage::success('Event created successfully!');
+                $this->redirectTo(route('events.index'));
+            } else {
+                FlashMessage::danger('There is incorrect data! Please check!');
+                $title = 'Events new';
+                $this->render('user/events/new', compact('title'));
+            }
+            
         } else {
             FlashMessage::danger('There is incorrect data! Please check!');
             $title = 'Events new';
@@ -75,8 +86,8 @@ class EventsController extends Controller
     {
         $params = $request->getParams();
         /** @var Event|null $event */
-        $event = $this->current_user->events()->findById($params['event_id']);
-
+        $event = $this->current_user->usersEvents();
+        dd($event);
         if ($event) {
             $title = "Event Painel";
             $this->render('user/events/show', compact('title', 'event'));

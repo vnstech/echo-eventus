@@ -5,6 +5,7 @@ namespace App\Models;
 use Lib\Validations;
 use Core\Database\ActiveRecord\Model;
 use Core\Database\ActiveRecord\BelongsTo;
+use Core\Database\ActiveRecord\HasMany;
 
 /**
  * @property int $id
@@ -59,8 +60,13 @@ class Event extends Model
         parent::__set($property, $value);
     }
 
-    public function user(): BelongsTo
+    // public function user(): BelongsTo
+    // {
+    //     return $this->belongsTo(User::class, 'user_id');
+    // }
+
+    public function usersEvents(): HasMany
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->hasMany(UserEvent::class, 'event_id');
     }
 }
