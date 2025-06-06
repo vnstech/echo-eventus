@@ -90,9 +90,11 @@ class EventsController extends Controller
 
         $event = Event::findById($params['event_id']);
 
+        $is_owner = $this->current_user->id === $event->owner_id;
+
         if ($event) {
             $title = "Event Painel";
-            $this->render('user/events/show', compact('title', 'event'));
+            $this->render('user/events/show', compact('title', 'event', 'is_owner'));
         } else {
             $title = "Event Error";
             $this->render('user/events/error', compact('title'));
@@ -138,9 +140,13 @@ class EventsController extends Controller
         $params = $request->getParams();
 
         $event = Event::findById($params['event_id']);
-        $event->destroy();
-
-        FlashMessage::success('Event removed successfully!');
-        $this->redirectTo(route('events.index'));
+        if ($this->current_user->id === $event->owner_id) { 
+            $event->destroy();
+            FlashMessage::success('Event removed successfully!');
+            $this->redirectTo(route('events.index'));
+        } else {
+            FlashMessage::danger('You are not authorized!');
+            $this->redirectTo(route('events.show', ['event_id' => $event->id]));
+        }
     }
 }
