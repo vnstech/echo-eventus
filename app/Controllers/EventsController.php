@@ -22,11 +22,10 @@ class EventsController extends Controller
 
         $perPage = 12;
 
-        $paginator = new Paginator(
-            class: Event::class,
+        $paginator = Event::paginate(
             page: $page,
             per_page: $perPage,
-            table: 'events',
+            from: 'events INNER JOIN users_events ON events.id = users_events.event_id',
             attributes: [
                 'name',
                 'start_date',
@@ -39,6 +38,7 @@ class EventsController extends Controller
                 'category',
                 'two_fa_check_attendance'
             ],
+            conditions: ['users_events.user_id' => $this->current_user->id],
             route: 'events.index'
         );
 

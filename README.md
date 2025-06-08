@@ -144,4 +144,21 @@ curl -H "Accept: application/json" -b "PHPSESSID=YOUR_SESSION_ID" localhost/even
 ./run remove-all
 ```
 
+## 🗂️ Access Database container
+
+```bash
+docker exec -it echo-eventus-db-1 /bin/sh
+```
+
+```bash
+mysql -u root -p
+```
+
+```bash
+empty password
+```
+
+```bash
+USE echo-eventus_development;
+```
 ---

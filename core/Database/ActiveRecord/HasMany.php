@@ -47,7 +47,7 @@ class HasMany
             class: $this->related,
             page: $page,
             per_page: $per_page,
-            table: $this->related::table(),
+            from: $this->related::table(),
             attributes: $this->related::columns(),
             conditions: [$this->foreignKey => $this->model->id],
             route: $route

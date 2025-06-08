@@ -281,15 +281,22 @@ abstract class Model
         return $models;
     }
 
-    public static function paginate(int $page = 1, int $per_page = 10, string $route = null): Paginator
-    {
+    public static function paginate(
+        int $page = 1,
+        int $per_page = 10,
+        ?string $from = null,
+        ?array $attributes = null,
+        ?string $route = null,
+        ?array $conditions = []
+    ): Paginator {
         return new Paginator(
             class: static::class,
             page: $page,
             per_page: $per_page,
-            table: static::$table,
-            attributes: static::$columns,
-            route: $route
+            from:  $from ?? static::$table, 
+            attributes: $attributes ?? static::$columns,
+            route: $route,
+            conditions: $conditions
         );
     }
 
