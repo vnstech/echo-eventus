@@ -1,8 +1,7 @@
-# 🎉 Echo Eventus
-
+# Echo Eventus
+#### v-Development
 A fullstack project for event management.
 
----
 
 ## 🧰 Technologies Used & Tested Versions
 
@@ -10,7 +9,6 @@ A fullstack project for event management.
 - [Docker Compose](https://docs.docker.com/compose/) (v2.35.1)
 - [Linux: Ubuntu](https://ubuntu.com/download) (v24.04.2 LTS)
 
----
 
 ## 🛠️ How to Run
 
@@ -69,7 +67,6 @@ or
 sudo chown www-data:www-data public/assets/uploads
 ```
 
----
 
 ## 🧪 Running Tests
 
@@ -96,7 +93,6 @@ or
 ./run all-tests
 ```
 
----
 
 ## 🧹 Linters
 
@@ -112,13 +108,11 @@ or
 ./run phpstan
 ```
 
----
 
 ## 🌐 Access the application
 
 [http://localhost](http://localhost)
 
----
 
 ## 📡 API Tests
 
@@ -136,7 +130,6 @@ curl -H "Accept: application/json" localhost
 curl -H "Accept: application/json" -b "PHPSESSID=YOUR_SESSION_ID" localhost/events
 ```
 
----
 
 ## 🗑️ Remove all containers, images, volumes, and vendor
 
@@ -161,4 +154,4 @@ empty password
 ```bash
 USE echo-eventus_development;
 ```
----
+
