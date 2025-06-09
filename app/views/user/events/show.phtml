@@ -15,6 +15,9 @@
                 <i class="bi bi-calendar-event me-2"></i> <?= $event->name ?>
             </div>
             <div class="d-flex align-items-center">
+                <a href="<?= route('members.index', ['event_id' => $event->id]) ?>" class="me-3">
+                    <i class="bi bi-people text-secondary-custom fs-5"></i>
+                </a>
                 <a href="<?= route('events.edit', ['event_id' => $event->id]) ?>" class="me-3">
                     <i class="bi bi-pencil-square text-secondary-custom fs-5"></i>
                 </a>

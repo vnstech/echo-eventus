@@ -6,7 +6,6 @@ use App\Models\Event;
 use Core\Http\Controllers\Controller;
 use Core\Http\Request;
 use Lib\FlashMessage;
-use Lib\Paginator;
 use App\Models\UserEvent;
 
 class EventsController extends Controller
