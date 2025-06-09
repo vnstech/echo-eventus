@@ -6,12 +6,13 @@ use Core\Http\Controllers\Controller;
 use Core\Http\Request;
 use Lib\FlashMessage;
 use App\Models\Event;
+use App\Models\UserEvent;
 
 class MembersController extends Controller
 {
     public function index(Request $request): void
     {
-        $params = $request->getParams();
+        $eventId = $request->getParam('event_id');
         
         $title = 'Members';
 
@@ -27,22 +28,26 @@ class MembersController extends Controller
             per_page: $perPage,
             from: 'users INNER JOIN users_events ON users.id = users_events.user_id',
             attributes: ['users.id', 'users.name', 'users.email'],
-            conditions: ['users_events.event_id' => $params['event_id']],
+            conditions: ['users_events.event_id' => $eventId],
             route: 'members.index'
         );
-        $event = Event::findById($params['event_id']);
+
+        $event = Event::findById($eventId);
+
         $ownerId = $event->owner_id; 
+
         $is_owner = $this->current_user->id === $ownerId;
-        $event = $this->current_user->usersEvents()->findById($params['event_id']);
-
-
+        $i = 0;
         $members = $paginator->registers();
-
         foreach ($members as $key => $member) {
-            if ($member->id === $ownerId) {
+            if ($member->id === $event->owner_id) {
                 unset($members[$key]);
+                array_unshift($members, $member);
+                $i++;
+                break;
             }
         }
+        
 
         $this->render('user/events/members/index', compact('title', 'members', 'paginator', 'is_owner', 'event'));
     }
@@ -54,4 +59,46 @@ class MembersController extends Controller
         $event = Event::findById($params['event_id']);
         $this->render('user/events/members/new', compact('title', 'event'));
     }
+
+    public function add(Request $request): void
+    {
+        $params = $request->getParams();
+
+        $user = User::findBy(['email' => $params['email']]);
+        if (!$user) {
+            FlashMessage::danger('User with this email does not exist.');
+            $this->redirectTo(route('members.new', ['event_id' => $params['event_id']]));
+        } else {
+
+            $checkPivot = UserEvent::where([
+                'user_id' => $user->id,
+                'event_id' => $params['event_id'],
+            ]);
+
+            if (empty($checkPivot)) {
+
+                $pivot = new UserEvent([
+                    'user_id' => $user->id,
+                    'event_id' => $params['event_id'],
+                ]);
+
+                if ($pivot->save()) {
+                    FlashMessage::success('Member added successfully!');
+                    $this->redirectTo(route('members.index', ['event_id' => $params['event_id']]));
+                } else {
+                    FlashMessage::danger('Could not add member. Please check the data.');
+                    $this->redirectTo(route('members.new', ['event_id' => $params['event_id']]));
+                }
+            } else {
+                FlashMessage::danger('This member is already added to the event.');
+                $this->redirectTo(route('members.new', ['event_id' => $params['event_id']]));
+            }
+        }
+    }
+
+
+    public function remove(Request $request) {
+        $params = $request->getParams();
+        dd($params);
+    } 
 }

@@ -13,17 +13,22 @@ Route::post('/login', [AuthController::class, 'authenticate'])->name('users.auth
 
 Route::middleware('auth')->group(function () {
     Route::get('/logout', [AuthController::class, 'destroy'])->name('users.logout');
-
+    
     Route::get('/events', [EventsController::class, 'index'])->name('events.index');
     Route::get('/events/new', [EventsController::class, 'new']) ->name('events.new');
     Route::post('/events/create', [EventsController::class, 'create'])->name('events.create');
-    Route::get('/events/{event_id}', [EventsController::class, 'show'])->name('events.show');
-    Route::get('/events/{event_id}/edit', [EventsController::class, 'edit'])->name('events.edit');
-    Route::put('/events/{event_id}', [EventsController::class, 'update'])->name('events.update');
-    Route::delete('/event/{event_id}', [EventsController::class, 'destroy'])->name('events.destroy');
 
-    Route::get('/events/{event_id}/members', [MembersController::class, 'index'])->name('members.index');
-    Route::get('/events/{event_id}/members/new', [MembersController::class, 'new'])->name('members.new');
+    Route::middleware('event')->group( function () { 
+        Route::get('/events/{event_id}', [EventsController::class, 'show'])->name('events.show');
+        Route::get('/events/{event_id}/edit', [EventsController::class, 'edit'])->name('events.edit');
+        Route::put('/events/{event_id}', [EventsController::class, 'update'])->name('events.update');
+        Route::delete('/event/{event_id}', [EventsController::class, 'destroy'])->name('events.destroy');
+
+        Route::get('/events/{event_id}/members', [MembersController::class, 'index'])->name('members.index');
+        Route::get('/events/{event_id}/members/new', [MembersController::class, 'new'])->name('members.new');
+        Route::put('/events/{event_id}/members/add', [MembersController::class, 'add'])->name('members.add');
+        Route::delete('/events/{event_id}/members/{user_id}remove', [MembersController::class, 'remove'])->name('events.remove');
+    });
 });
 
 Route::middleware('admin')->group(function () {

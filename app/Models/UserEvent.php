@@ -42,12 +42,12 @@ class UserEvent extends Model
             return;
         }
 
-        if (!user::findById($this->user_id)) {
+        if (!User::findById($this->user_id)) {
             $this->addError('user_id', 'does not exist!');
             return;
         }
 
-        if (!event::findById($this->event_id)) {
+        if (!Event::findById($this->event_id)) {
             $this->addError('event_id', 'does not exist!');
             return;
         }

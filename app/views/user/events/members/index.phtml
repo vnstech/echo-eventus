@@ -21,13 +21,17 @@
     <?php else: ?>
         <?php foreach ($members as $member): ?>
             <div class="card mb-3">
-                <div class="card-body d-flex justify-content-between align-items-center">
+                <div class="card-body d-flex justify-content-between align-items-center" id=<?= $member->id ?>>
                     <div>
                         <h5 class="card-title mb-0"><?= htmlspecialchars($member->name) ?></h5>
+                        
                         <p class="card-text text-muted small mb-0"><?= htmlspecialchars($member->email) ?></p>   
+                        <?php if ($member->id == $event->owner_id): ?>
+                            <p class="card-text ">owner</p>
+                        <?php endif; ?>
                     </div>
-
-                    <?php if ($is_owner): ?>
+                    
+                    <?php if ($is_owner && $member->id !== $event->owner_id): ?>
                         <button type="button" class="btn btn-link p-0 m-0" data-bs-toggle="modal" data-bs-target="#deleteModal">
                             <i class="bi bi-trash3 text-danger-custom fs-5"></i>
                         </button>
@@ -53,7 +57,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <form action="" method="POST">
+                        <form action="/events/<?= $event->id ?>/members/remove" method="DELETE">
                             <input type="hidden" name="_method" value="DELETE">
                             <button type="submit" class="btn btn-danger">Remove member</button>
                         </form>
