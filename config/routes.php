@@ -25,9 +25,12 @@ Route::middleware('auth')->group(function () {
         Route::delete('/event/{event_id}', [EventsController::class, 'destroy'])->name('events.destroy');
 
         Route::get('/events/{event_id}/members', [MembersController::class, 'index'])->name('members.index');
-        Route::get('/events/{event_id}/members/new', [MembersController::class, 'new'])->name('members.new');
-        Route::put('/events/{event_id}/members/add', [MembersController::class, 'add'])->name('members.add');
-        Route::delete('/events/{event_id}/members/{user_id}remove', [MembersController::class, 'remove'])->name('events.remove');
+
+        Route::middleware('event_owner')->group( function () { 
+            Route::get('/events/{event_id}/members/new', [MembersController::class, 'new'])->name('members.new');
+            Route::put('/events/{event_id}/members/add', [MembersController::class, 'add'])->name('members.add');
+            Route::delete('/events/{event_id}/members/{user_id}/remove', [MembersController::class, 'remove'])->name('events.remove');
+        });
     });
 });
 

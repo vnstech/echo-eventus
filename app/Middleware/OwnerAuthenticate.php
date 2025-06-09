@@ -5,16 +5,16 @@ namespace App\Middleware;
 use Core\Http\Middleware\Middleware;
 use Core\Http\Request;
 use Lib\FlashMessage;
-use Lib\Authentication\AuthUserEvents;
+use Lib\Authentication\AuthEventOwner;
 
-class EventAuthenticate implements Middleware
+class OwnerAuthenticate implements Middleware
 {
     public function handle(Request $request): void
     {
         $eventId = $request->getParam('event_id');
         
-        if (!AuthUserEvents::check($eventId)) {
-            FlashMessage::danger('Event not accessible');
+        if (!AuthEventOwner::check($eventId)) {
+            FlashMessage::danger('You are not authorized');
             $this->redirectTo(route('events.index'));
         }
     }

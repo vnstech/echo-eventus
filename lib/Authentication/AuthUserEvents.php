@@ -2,8 +2,6 @@
 
 namespace Lib\Authentication;
 
-use App\Models\Event;
-use App\Models\User;
 use App\Models\UserEvent;
 
 class AuthUserEvents
