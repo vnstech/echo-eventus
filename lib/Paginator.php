@@ -1,4 +1,5 @@
 <?php
+
 namespace Lib;
 
 use Core\Constants\Constants;
@@ -27,16 +28,46 @@ class Paginator
         $this->loadRegisters();
     }
 
-    public function getPage(): int { return $this->page; }
-    public function perPage(): int { return $this->per_page; }
-    public function totalOfRegistersOfPage(): int { return $this->totalOfRegistersOfPage; }
-    public function totalOfRegisters(): int { return $this->totalOfRegisters; }
-    public function totalOfPages(): int { return $this->totalOfPages; }
-    public function previousPage(): int { return $this->page - 1; }
-    public function nextPage(): int { return $this->page + 1; }
-    public function hasPreviousPage(): bool { return $this->previousPage() >= 1; }
-    public function hasNextPage(): bool { return $this->nextPage() <= $this->totalOfPages(); }
-    public function isPage(int $page): bool { return $this->page === $page; }
+    public function getPage(): int
+    {
+        return $this->page;
+    }
+    public function perPage(): int
+    {
+        return $this->per_page;
+    }
+    public function totalOfRegistersOfPage(): int
+    {
+        return $this->totalOfRegistersOfPage;
+    }
+    public function totalOfRegisters(): int
+    {
+        return $this->totalOfRegisters;
+    }
+    public function totalOfPages(): int
+    {
+        return $this->totalOfPages;
+    }
+    public function previousPage(): int
+    {
+        return $this->page - 1;
+    }
+    public function nextPage(): int
+    {
+        return $this->page + 1;
+    }
+    public function hasPreviousPage(): bool
+    {
+        return $this->previousPage() >= 1;
+    }
+    public function hasNextPage(): bool
+    {
+        return $this->nextPage() <= $this->totalOfPages();
+    }
+    public function isPage(int $page): bool
+    {
+        return $this->page === $page;
+    }
 
     public function entriesInfo(): string
     {
@@ -112,7 +143,9 @@ SQL;
 
     private function buildConditions(): string
     {
-        if (empty($this->conditions)) return '';
+        if (empty($this->conditions)) {
+            return '';
+        }
 
         $parts = [];
         foreach ($this->conditions as $column => $_) {

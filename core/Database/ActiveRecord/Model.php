@@ -281,6 +281,10 @@ abstract class Model
         return $models;
     }
 
+    /**
+     * @param array<string>|null $attributes
+     * @param array<string, mixed>|null $conditions
+     */
     public static function paginate(
         int $page = 1,
         int $per_page = 10,

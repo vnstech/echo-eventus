@@ -16,11 +16,11 @@ class AuthUserEvents
             'event_id' => $eventId,
             'user_id' => $userId
         ]);
-        
+
         if (!$pivots) {
             return false;
         }
-        
+
         return true;
     }
 }

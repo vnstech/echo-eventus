@@ -58,12 +58,12 @@ class EventsController extends Controller
     {
         $params = $request->getParams();
         $params['event']['owner_id'] = $this->current_user->id;
-        
+
         $event = new Event($params['event']);
 
         if ($event->save()) {
             $usersEvents = new UserEvent([
-                'user_id' => $this->current_user->id, 
+                'user_id' => $this->current_user->id,
                 'event_id' => $event->id
             ]);
 
@@ -75,7 +75,6 @@ class EventsController extends Controller
                 $title = 'Events new';
                 $this->render('user/events/new', compact('title'));
             }
-            
         } else {
             FlashMessage::danger('There is incorrect data! Please check!');
             $title = 'Events new';
@@ -139,7 +138,7 @@ class EventsController extends Controller
         $params = $request->getParams();
 
         $event = Event::findById($params['event_id']);
-        if ($this->current_user->id === $event->owner_id) { 
+        if ($this->current_user->id === $event->owner_id) {
             $event->destroy();
             FlashMessage::success('Event removed successfully!');
             $this->redirectTo(route('events.index'));

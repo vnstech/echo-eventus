@@ -9,9 +9,9 @@ class AuthEventOwner
     public static function check(int $eventId): bool
     {
         $event = Event::findById($eventId);
-        
+
         $userId = $_SESSION['user']['id'];
-        if($event->owner_id != $userId) {
+        if ($event->owner_id != $userId) {
             return false;
         }
 

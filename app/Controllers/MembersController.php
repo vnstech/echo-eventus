@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controllers;
+
 use App\Models\User;
 use Core\Http\Controllers\Controller;
 use Core\Http\Request;
@@ -13,7 +14,7 @@ class MembersController extends Controller
     public function index(Request $request): void
     {
         $eventId = $request->getParam('event_id');
-        
+
         $title = 'Members';
 
         $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int) $_GET['page'] : 1;
@@ -34,7 +35,7 @@ class MembersController extends Controller
 
         $event = Event::findById($eventId);
 
-        $ownerId = $event->owner_id; 
+        $ownerId = $event->owner_id;
 
         $is_owner = $this->current_user->id === $ownerId;
         $i = 0;
@@ -47,7 +48,7 @@ class MembersController extends Controller
                 break;
             }
         }
-        
+
 
         $this->render('user/events/members/index', compact('title', 'members', 'paginator', 'is_owner', 'event'));
     }
@@ -69,14 +70,12 @@ class MembersController extends Controller
             FlashMessage::danger('User with this email does not exist.');
             $this->redirectTo(route('members.new', ['event_id' => $params['event_id']]));
         } else {
-
             $checkPivot = UserEvent::where([
                 'user_id' => $user->id,
                 'event_id' => $params['event_id'],
             ]);
 
             if (empty($checkPivot)) {
-
                 $pivot = new UserEvent([
                     'user_id' => $user->id,
                     'event_id' => $params['event_id'],
@@ -97,15 +96,16 @@ class MembersController extends Controller
     }
 
 
-    public function remove(Request $request) {
+    public function remove(Request $request): void
+    {
         $params = $request->getParams();
         $event = Event::findById($params['event_id']);
-        if($event->owner_id != $params['user_id']) {
+        if ($event->owner_id != $params['user_id']) {
             $pivot = UserEvent::findBy([
                 'user_id' => $params['user_id'],
                 'event_id' => $params['event_id'],
             ]);
-            
+
             if ($pivot->destroy()) {
                 FlashMessage::success('Member removed successfully!');
             } else {
@@ -116,5 +116,5 @@ class MembersController extends Controller
             FlashMessage::danger('You cannot remove the event owner from the event.');
             $this->redirectTo(route('members.index', ['event_id' => $params['event_id']]));
         }
-    } 
+    }
 }
