@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Event;
 use Tests\Acceptance\BaseAcceptanceCest;
 use Tests\Support\AcceptanceTester;
+use App\Models\UserEvent;
 
 class EventCest extends BaseAcceptanceCest
 {
@@ -23,7 +24,7 @@ class EventCest extends BaseAcceptanceCest
             'name' => "Test Event",
             'start_date' => '2025-06-01T09:00',
             'finish_date' => '2025-06-01T18:00',
-            'user_id' => $user->id,
+            'owner_id' => $user->id,
             'status' => 'upcoming',
             'description' => 'Description for event test',
             'location_name' => 'TEST',
@@ -31,8 +32,14 @@ class EventCest extends BaseAcceptanceCest
             'category' => '',
             'two_fa_check_attendance' => false
         ]);
-
         $event->save();
+
+        $pivot = new UserEvent([
+            'user_id' => $user->id,
+            'event_id' => $event->id,
+        ]);
+        $pivot->save();
+
         $page->login($user->email, $user->password);
         $page->amOnPage('/events');
 
@@ -55,7 +62,7 @@ class EventCest extends BaseAcceptanceCest
                 'name' => "Test Event {$i}",
                 'start_date' => '2025-06-01T09:00',
                 'finish_date' => '2025-06-01T18:00',
-                'user_id' => $user->id,
+                'owner_id' => $user->id,
                 'status' => 'upcoming',
                 'description' => "Description for event test {$i}",
                 'location_name' => "TEST Location {$i}",
@@ -64,6 +71,11 @@ class EventCest extends BaseAcceptanceCest
                 'two_fa_check_attendance' => false
             ]);
             $event->save();
+            $pivot = new UserEvent([
+                'user_id' => $user->id,
+                'event_id' => $event->id,
+            ]);
+            $pivot->save();
             $events[] = $event;
         }
 
@@ -95,10 +107,10 @@ class EventCest extends BaseAcceptanceCest
         $user->save();
 
         $eventData = [
-            'name' => null, //invalid
+            'name' => null, // invalid
             'start_date' => '2025-06-01T09:00',
             'finish_date' => '2025-06-01T18:00',
-            'user_id' => $user->id,
+            'owner_id' => $user->id,
             'status' => 'upcoming',
             'description' => 'Description for event test',
             'location_name' => 'TEST',
@@ -108,8 +120,14 @@ class EventCest extends BaseAcceptanceCest
         ];
 
         $event = new Event($eventData);
-
         $event->save();
+
+        $pivot = new UserEvent([
+            'user_id' => $user->id,
+            'event_id' => $event->id,
+        ]);
+        $pivot->save();
+
         $page->login($user->email, $user->password);
         $page->amOnPage('/events');
 
@@ -130,7 +148,7 @@ class EventCest extends BaseAcceptanceCest
             'name' => "Original Event Name",
             'start_date' => '2025-06-1T09:00',
             'finish_date' => '2025-06-1T18:00',
-            'user_id' => $user->id,
+            'owner_id' => $user->id,
             'status' => 'upcoming',
             'description' => 'Test description',
             'location_name' => 'Test location',
@@ -138,14 +156,19 @@ class EventCest extends BaseAcceptanceCest
             'category' => '',
             'two_fa_check_attendance' => false
         ]);
-
         $event->save();
+
+        $pivot = new UserEvent([
+            'user_id' => $user->id,
+            'event_id' => $event->id,
+        ]);
+        $pivot->save();
+
         $page->login($user->email, $user->password);
         $page->amOnPage("/events/{$event->id}/edit");
 
         $newName = "Updated Event Name";
         $page->fillField('name', $newName);
-
         $page->click('Update Event');
 
         $page->seeCurrentUrlEquals('/events');
@@ -166,7 +189,7 @@ class EventCest extends BaseAcceptanceCest
             'name' => "Original Event Name",
             'start_date' => '2025-06-01T09:00',
             'finish_date' => '2025-06-01T18:00',
-            'user_id' => $user->id,
+            'owner_id' => $user->id,
             'status' => 'upcoming',
             'description' => 'Test description',
             'location_name' => 'Test location',
@@ -176,6 +199,12 @@ class EventCest extends BaseAcceptanceCest
         ]);
         $event->save();
 
+        $pivot = new UserEvent([
+            'user_id' => $user->id,
+            'event_id' => $event->id,
+        ]);
+        $pivot->save();
+
         $page->login($user->email, $user->password);
         $page->amOnPage("/events/{$event->id}/edit");
 
@@ -183,7 +212,6 @@ class EventCest extends BaseAcceptanceCest
         $page->click('Update Event');
 
         $page->see('Error updating event. Please check the data!');
-
         $page->seeCurrentUrlEquals("/events/{$event->id}");
     }
 
@@ -201,7 +229,7 @@ class EventCest extends BaseAcceptanceCest
             'name' => "Event To Be Deleted",
             'start_date' => '2025-06-01T09:00',
             'finish_date' => '2025-06-01T18:00',
-            'user_id' => $user->id,
+            'owner_id' => $user->id,
             'status' => 'upcoming',
             'description' => 'This event will be deleted in the test',
             'location_name' => 'Test Location',
@@ -211,15 +239,129 @@ class EventCest extends BaseAcceptanceCest
         ]);
         $event->save();
 
+        $pivot = new UserEvent([
+            'user_id' => $user->id,
+            'event_id' => $event->id,
+        ]);
+        $pivot->save();
+
         $page->login($user->email, $user->password);
         $page->amOnPage("/events/{$event->id}");
-
         $page->click('button[data-bs-target="#deleteModal"]');
-        $page->waitForElementVisible('#deleteModal form button[type=submit]', 5);
+        $page->waitForElementVisible('#deleteModal form button[type=submit]', 2);
         $page->click('#deleteModal form button[type=submit]');
 
         $page->seeCurrentUrlEquals('/events');
+        $page->dontSee($event->name);
+    }
 
+    public function seeRelationUsersEvents(AcceptanceTester $page): void
+    {
+        $user1 = new User([
+            'name' => 'User 1',
+            'email' => 'fulano@example.com',
+            'password' => '123456',
+            'password_confirmation' => '123456'
+        ]);
+        $user1->save();
+
+        $user2 = new User([
+            'name' => 'User 2',
+            'email' => 'fulano1@example.com',
+            'password' => '123456',
+            'password_confirmation' => '123456'
+        ]);
+        $user2->save();
+
+        $event = new Event([
+            'name' => "Event To Be Deleted",
+            'start_date' => '2025-06-01T09:00',
+            'finish_date' => '2025-06-01T18:00',
+            'owner_id' => $user1->id,
+            'status' => 'upcoming',
+            'description' => 'This event will be deleted in the test',
+            'location_name' => 'Test Location',
+            'address' => 'Test Address',
+            'category' => '',
+            'two_fa_check_attendance' => false
+        ]);
+        $event->save();
+
+        $pivot1 = new UserEvent([
+            'user_id' => $user1->id,
+            'event_id' => $event->id,
+        ]);
+        $pivot1->save();
+
+        $pivot2 = new UserEvent([
+            'user_id' => $user2->id,
+            'event_id' => $event->id,
+        ]);
+        $pivot2->save();
+        $page->login($user1->email, $user1->password);
+        $page->amOnPage("/events");
+        $page->see($event->name);
+        $page->click('Logout');
+        $page->login($user2->email, $user2->password);
+        $page->amOnPage("/events");
+        $page->see($event->name);
+    }
+
+    public function removeRelationUsersEvents(AcceptanceTester $page): void
+    {
+        $user1 = new User([
+            'name' => 'User 1',
+            'email' => 'fulano@example.com',
+            'password' => '123456',
+            'password_confirmation' => '123456'
+        ]);
+        $user1->save();
+
+        $user2 = new User([
+            'name' => 'User 2',
+            'email' => 'fulano1@example.com',
+            'password' => '123456',
+            'password_confirmation' => '123456'
+        ]);
+        $user2->save();
+
+        $event = new Event([
+            'name' => "Event To Be Deleted",
+            'start_date' => '2025-06-01T09:00',
+            'finish_date' => '2025-06-01T18:00',
+            'owner_id' => $user1->id,
+            'status' => 'upcoming',
+            'description' => 'This event will be deleted in the test',
+            'location_name' => 'Test Location',
+            'address' => 'Test Address',
+            'category' => '',
+            'two_fa_check_attendance' => false
+        ]);
+        $event->save();
+
+        $pivot1 = new UserEvent([
+            'user_id' => $user1->id,
+            'event_id' => $event->id,
+        ]);
+        $pivot1->save();
+
+        $pivot2 = new UserEvent([
+            'user_id' => $user2->id,
+            'event_id' => $event->id,
+        ]);
+
+        $pivot2->save();
+        $page->login($user1->email, $user1->password);
+
+        $page->amOnPage("/events/{$event->id}/members");
+        $page->click('button[data-bs-target="#deleteModal-' . $user2->id . '"]');
+        $page->waitForElementVisible('#deleteModal-' . $user2->id);
+        $page->click('#deleteModal-' . $user2->id . ' form button[type=submit]');
+        $page->dontSee($user2->name);
+        $page->click('Logout');
+
+        $page->login($user2->email, $user2->password);
+        $page->amOnPage("/events");
         $page->dontSee($event->name);
     }
 }

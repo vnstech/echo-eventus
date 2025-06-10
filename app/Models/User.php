@@ -72,8 +72,8 @@ class User extends Model
         }
     }
 
-    public function events(): HasMany
+    public function usersEvents(): HasMany
     {
-        return $this->hasMany(Event::class, 'user_id');
+        return $this->hasMany(UserEvent::class, 'user_id');
     }
 }

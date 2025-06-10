@@ -27,7 +27,7 @@ class EventTest extends TestCase
             'name' => "Event Name",
             'start_date' => '2025-06-01T09:00',
             'finish_date' => '2025-06-01T18:00',
-            'user_id' => $this->user->id,
+            'owner_id' => $this->user->id,
             'status' => 'upcoming',
             'description' => 'Test description',
             'location_name' => 'Test location',
@@ -60,7 +60,7 @@ class EventTest extends TestCase
     public function test_update_event_name(): void
     {
         $this->assertNotNull($this->event);
-        $newName = 'Nome Atualizado';
+        $newName = 'Updated Event Name';
         $this->event->name = $newName;
         $this->event->save();
 

@@ -5,10 +5,11 @@ namespace App\Models;
 use Lib\Validations;
 use Core\Database\ActiveRecord\Model;
 use Core\Database\ActiveRecord\BelongsTo;
+use Core\Database\ActiveRecord\HasMany;
 
 /**
  * @property int $id
- * @property int $user_id
+ * @property int $owner_id
  * @property string $status
  * @property string $name
  * @property string $description
@@ -23,7 +24,7 @@ class Event extends Model
 {
     protected static string $table = 'events';
     protected static array $columns = [
-        'user_id',
+        'owner_id',
         'status',
         'name',
         'description',
@@ -35,12 +36,9 @@ class Event extends Model
         'two_fa_check_attendance'
     ];
 
-    protected ?string $password = null;
-    protected ?string $password_confirmation = null;
-
     public function validates(): void
     {
-        Validations::notEmpty('user_id', $this);
+        Validations::notEmpty('owner_id', $this);
         Validations::notEmpty('name', $this);
         Validations::notEmpty('start_date', $this);
     }
@@ -59,8 +57,8 @@ class Event extends Model
         parent::__set($property, $value);
     }
 
-    public function user(): BelongsTo
+    public function usersEvents(): HasMany
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->hasMany(UserEvent::class, 'event_id');
     }
 }
