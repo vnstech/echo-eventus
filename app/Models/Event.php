@@ -57,11 +57,6 @@ class Event extends Model
         parent::__set($property, $value);
     }
 
-    // public function user(): BelongsTo
-    // {
-    //     return $this->belongsTo(User::class, 'user_id');
-    // }
-
     public function usersEvents(): HasMany
     {
         return $this->hasMany(UserEvent::class, 'event_id');

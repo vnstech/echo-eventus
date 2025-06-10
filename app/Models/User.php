@@ -72,11 +72,6 @@ class User extends Model
         }
     }
 
-    // public function events(): HasMany
-    // {
-    //     return $this->hasMany(Event::class, 'user_id');
-    // }
-
     public function usersEvents(): HasMany
     {
         return $this->hasMany(UserEvent::class, 'user_id');

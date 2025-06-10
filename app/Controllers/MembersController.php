@@ -99,6 +99,22 @@ class MembersController extends Controller
 
     public function remove(Request $request) {
         $params = $request->getParams();
-        dd($params);
+        $event = Event::findById($params['event_id']);
+        if($event->owner_id != $params['user_id']) {
+            $pivot = UserEvent::findBy([
+                'user_id' => $params['user_id'],
+                'event_id' => $params['event_id'],
+            ]);
+            
+            if ($pivot->destroy()) {
+                FlashMessage::success('Member removed successfully!');
+            } else {
+                FlashMessage::danger('Could not remove member. Please check the data.');
+            }
+            $this->redirectTo(route('members.index', ['event_id' => $params['event_id']]));
+        } else {
+            FlashMessage::danger('You cannot remove the event owner from the event.');
+            $this->redirectTo(route('members.index', ['event_id' => $params['event_id']]));
+        }
     } 
 }
