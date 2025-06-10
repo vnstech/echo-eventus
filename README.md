@@ -1,125 +1,157 @@
 # Echo Eventus
+#### v-Development
+A fullstack project for event management.
 
-### Dependencies
 
-- Docker
-- Docker Compose
+## 🧰 Technologies Used & Tested Versions
 
-### To run
+- [Docker](https://www.docker.com/) (v26.1.3)
+- [Docker Compose](https://docs.docker.com/compose/) (v2.35.1)
+- [Linux: Ubuntu](https://ubuntu.com/download) (v24.04.2 LTS)
 
-#### Clone Repository
 
-```
+## 🛠️ How to Run
+
+### 1. Clone the repository
+
+```bash
 git clone https://github.com/vnstech/echo-eventus.git
+```
 or
-git@github.com:vnstech/echo-eventus.git
+
+```bash
+git clone git@github.com:vnstech/echo-eventus.git
+```
+```bash
 cd echo-eventus
 ```
 
-#### Define the env variables
+### 2. Set environment variables
 
-```
+```bash
 cp .env.example .env
 ```
 
-#### Install the dependencies
+### 3. Install dependencies
 
-```
+```bash
 ./run composer install
 ```
 
-#### Up the containers
+### 4. Start the containers
 
-```
+```bash
 docker compose up -d
 ```
+or
 
-ou
-
-```
+```bash
 ./run up -d
 ```
 
-#### Create database and tables
+### 5. Create database and tables
 
-```
+```bash
 ./run db:reset
 ```
 
-#### Populate database
+### 6. Populate the database
 
-```
+```bash
 ./run db:populate
 ```
 
-### Fixed uploads folder permission
+### 7. Fix uploads folder permission
 
-```
+```bash
 sudo chown www-data:www-data public/assets/uploads
 ```
 
-#### Run the tests
 
-```
+## 🧪 Running Tests
+
+### Unit tests
+
+```bash
 docker compose run --rm php ./vendor/bin/phpunit tests --color
 ```
-
 or
 
-```
+```bash
 ./run test
 ```
 
-#### Run the linters
+### Browser tests
 
-[PHPCS](https://github.com/PHPCSStandards/PHP_CodeSniffer/)
-
-```
-./run phpcs
-```
-
-[PHPStan](https://phpstan.org/)
-
-```
-./run phpstan
-```
-
-Access [localhost](http://localhost)
-
-#### Browser tests:
-
-```
+```bash
 ./run test:browser
 ```
 
-### Run all tests:
+### Run all tests
 
-```
+```bash
 ./run all-tests
 ```
 
-### API tests
 
-#### Unauthenticated route
+## 🧹 Linters
 
-```shell
-curl -H "Accept: application/json" localhost/problems
+- [PHPCS](https://github.com/PHPCSStandards/PHP_CodeSniffer/)
+
+```bash
+./run phpcs
 ```
 
-#### Authenticated route
+- [PHPStan](https://phpstan.org/)
 
-In this case you need to change the PHPSESSID value according to your session ID.
-
-```shell
-curl -H "Accept: application/json" -b "PHPSESSID=5f55f364a48d87fb7ef9f18425a8ae88" localhost/problems
+```bash
+./run phpstan
 ```
 
-#### Remove all container images volumes from your computer and also vendor
 
+## 🌐 Access the application
+
+[http://localhost](http://localhost)
+
+
+## 📡 API Tests
+
+### Unauthenticated route
+
+```bash
+curl -H "Accept: application/json" localhost
 ```
+
+### Authenticated route
+
+> Change the `PHPSESSID` value to your session ID.
+
+```bash
+curl -H "Accept: application/json" -b "PHPSESSID=YOUR_SESSION_ID" localhost/events
+```
+
+
+## 🗑️ Remove all containers, images, volumes, and vendor
+
+```bash
 ./run remove-all
 ```
 
-### Other Tests:
+## 🗂️ Access Database container
 
+```bash
+docker exec -it echo-eventus-db-1 /bin/sh
+```
+
+```bash
+mysql -u root -p
+```
+
+```bash
+empty password
+```
+
+```bash
+USE echo-eventus_development;
+```
 

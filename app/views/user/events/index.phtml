@@ -46,7 +46,9 @@
             </div>
         <?php endforeach; ?>
     </div>
-    <div class="d-flex justify-content-center mt-4">
-        <?php $paginator->renderPagesNavigation(); ?>
-    </div>
+    <?php if (!empty($events)): ?>
+        <div class="d-flex justify-content-center mt-4">
+            <?php $paginator->renderPagesNavigation(); ?>
+        </div>
+    <?php endif; ?>
 </div>

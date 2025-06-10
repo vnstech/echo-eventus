@@ -6,7 +6,7 @@ use App\Models\Event;
 use Core\Http\Controllers\Controller;
 use Core\Http\Request;
 use Lib\FlashMessage;
-use Lib\Paginator;
+use App\Models\UserEvent;
 
 class EventsController extends Controller
 {
@@ -21,16 +21,15 @@ class EventsController extends Controller
 
         $perPage = 12;
 
-        $paginator = new Paginator(
-            class: Event::class,
+        $paginator = Event::paginate(
             page: $page,
             per_page: $perPage,
-            table: 'events',
+            from: 'events INNER JOIN users_events ON events.id = users_events.event_id',
             attributes: [
                 'name',
                 'start_date',
                 'finish_date',
-                'user_id',
+                'owner_id',
                 'status',
                 'description',
                 'location_name',
@@ -38,7 +37,7 @@ class EventsController extends Controller
                 'category',
                 'two_fa_check_attendance'
             ],
-            conditions: ['user_id' => $this->current_user->id],
+            conditions: ['users_events.user_id' => $this->current_user->id],
             route: 'events.index'
         );
 
@@ -51,19 +50,31 @@ class EventsController extends Controller
     public function new(Request $request): void
     {
         $title = 'Events new';
-        $this->current_user->events()->new();
+        $this->current_user->usersEvents()->new();
         $this->render('user/events/new', compact('title'));
     }
 
     public function create(Request $request): void
     {
         $params = $request->getParams();
-        error_log(print_r($params, true));
-        $event = $this->current_user->events()->new($params['event']);
+        $params['event']['owner_id'] = $this->current_user->id;
+
+        $event = new Event($params['event']);
 
         if ($event->save()) {
-            FlashMessage::success('Event created successfully!');
-            $this->redirectTo(route('events.index'));
+            $usersEvents = new UserEvent([
+                'user_id' => $this->current_user->id,
+                'event_id' => $event->id
+            ]);
+
+            if ($usersEvents->save()) {
+                FlashMessage::success('Event created successfully!');
+                $this->redirectTo(route('events.index'));
+            } else {
+                FlashMessage::danger('There is incorrect data! Please check!');
+                $title = 'Events new';
+                $this->render('user/events/new', compact('title'));
+            }
         } else {
             FlashMessage::danger('There is incorrect data! Please check!');
             $title = 'Events new';
@@ -74,12 +85,14 @@ class EventsController extends Controller
     public function show(Request $request): void
     {
         $params = $request->getParams();
-        /** @var Event|null $event */
-        $event = $this->current_user->events()->findById($params['event_id']);
+
+        $event = Event::findById($params['event_id']);
+
+        $is_owner = $this->current_user->id === $event->owner_id;
 
         if ($event) {
             $title = "Event Painel";
-            $this->render('user/events/show', compact('title', 'event'));
+            $this->render('user/events/show', compact('title', 'event', 'is_owner'));
         } else {
             $title = "Event Error";
             $this->render('user/events/error', compact('title'));
@@ -90,7 +103,7 @@ class EventsController extends Controller
     {
         $params = $request->getParams();
         $title = 'Events Edit';
-        $event = $this->current_user->events()->findById($params['event_id']);
+        $event = Event::findById($params['event_id']);
 
         $this->render('/user/events/edit', compact('title', 'event'));
     }
@@ -100,7 +113,7 @@ class EventsController extends Controller
         $params = $request->getParams();
 
         /** @var Event|null $event */
-        $event = $this->current_user->events()->findById($params['event']);
+        $event = Event::findById($params['event_id']);
 
         if (!$event) {
             FlashMessage::danger('Event not found!');
@@ -124,10 +137,14 @@ class EventsController extends Controller
     {
         $params = $request->getParams();
 
-        $event = $this->current_user->events()->findById($params['event_id']);
-        $event->destroy();
-
-        FlashMessage::success('Evento removido com sucesso!');
-        $this->redirectTo(route('events.index'));
+        $event = Event::findById($params['event_id']);
+        if ($this->current_user->id === $event->owner_id) {
+            $event->destroy();
+            FlashMessage::success('Event removed successfully!');
+            $this->redirectTo(route('events.index'));
+        } else {
+            FlashMessage::danger('You are not authorized!');
+            $this->redirectTo(route('events.show', ['event_id' => $event->id]));
+        }
     }
 }

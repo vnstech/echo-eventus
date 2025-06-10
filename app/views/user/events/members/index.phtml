@@ -1,0 +1,88 @@
+<div class="container py-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-5 position-relative">
+
+        <a href="/events" class="btn btn-outline-primary">
+            <i class="bi bi-arrow-left"></i> Back to Events
+        </a>
+        <?php if ($this->current_user->id == $event->owner_id): ?>
+            <a  
+                href="<?= route('members.new', ['event_id' => $event->id]) ?>"
+                type="button" 
+                class="btn btn-outline-primary"
+            >
+                <i class="bi bi-plus text-danger-custom fs-5"></i>
+            </a>
+        <?php endif ?>
+
+    </div>
+
+    <?php if (empty($members)): ?>
+        <p class="text-center text-muted">No members found for this event.</p>
+    <?php else: ?>
+        <?php foreach ($members as $member): ?>
+            <div class="card mb-3">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="card-title mb-0"><?= htmlspecialchars($member->name) ?></h5>
+                        <p class="card-text text-muted small mb-0"><?= htmlspecialchars($member->email) ?></p>
+                        <?php if ($member->id == $event->owner_id): ?>
+                            <p class="card-text ">owner</p>
+                        <?php endif; ?>
+                    </div>
+
+                    <?php if ($is_owner && $member->id !== $event->owner_id): ?>
+                        <button
+                            type="button"
+                            class="btn btn-link p-0 m-0"
+                            data-bs-toggle="modal"
+                            data-bs-target="#deleteModal-<?= $member->id ?>"
+                        >
+                            <i class="bi bi-trash3 text-danger-custom fs-5"></i>
+                        </button>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <?php if ($is_owner && $member->id !== $event->owner_id): ?>
+                <div 
+                    class="modal fade"
+                    id="deleteModal-<?= $member->id ?>"
+                    tabindex="-1"
+                    aria-labelledby="deleteModalLabel-<?= $member->id ?>"
+                    aria-hidden="true"
+                >
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title fw-bold text-danger" id="deleteModalLabel-<?= $member->id ?>">
+                                    <i class="bi bi-exclamation-triangle-fill me-2"></i>Confirm Removal
+                                </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Are you sure you want to remove this member?</p>
+                                <p class="text-danger-custom">This action cannot be undone!</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <form action="/events/<?= $event->id ?>/members/<?= $member->id ?>/remove" method="POST">
+                                    <input type="hidden" name="_method" value="DELETE">
+                                    <button type="submit" class="btn btn-danger">Remove member</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+        <?php endforeach; ?>
+
+    <?php endif; ?>
+
+    
+    <?php if (!empty($members)): ?>
+        <div class="d-flex justify-content-center mt-4">
+            <?php $paginator->renderPagesNavigation(); ?>
+        </div>
+    <?php endif; ?>
+</div>
