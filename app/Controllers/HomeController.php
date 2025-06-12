@@ -60,6 +60,4 @@ class HomeController extends Controller
             $this->render('visitor/home/error', compact('title'));
         }
     }
-
-
 }
