@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+
 use Lib\Validations;
 use Core\Database\ActiveRecord\Model;
 use Core\Database\ActiveRecord\BelongsTo;
@@ -33,15 +34,14 @@ class Participant extends Model
 
     public function __set(string $property, mixed $value): void
     {
-      if ($property === 'check_in' || $property === 'check_out'){
-          $value = $value ? 1 : 0;
-      }
-      parent::__set($property, $value);
+        if ($property === 'check_in' || $property === 'check_out') {
+            $value = $value ? 1 : 0;
+        }
+        parent::__set($property, $value);
     }
 
     public function event(): BelongsTo
     {
         return $this->belongsTo(Event::class, 'event_id');
     }
-
 }
