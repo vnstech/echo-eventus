@@ -11,7 +11,7 @@ use Core\Database\ActiveRecord\BelongsTo;
  * @property int $event_id
  * @property string $email
  * @property string $name
- * @property bool @check_in
+ * @property bool $check_in
  * @property bool $check_out
  */
 
