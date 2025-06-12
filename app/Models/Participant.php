@@ -19,17 +19,17 @@ class Participant extends Model
 {
     protected static string $table = 'participants';
     protected static array $columns = [
-      'event_id',
-      'email',
-      'name',
-      'check_in',
-      'check_out'
+        'event_id',
+        'email',
+        'name',
+        'check_in',
+        'check_out'
     ];
 
     public function validates(): void
     {
-        Validations::notEmpty('event_id');
-        Validations::notEmpty('email');
+        Validations::notEmpty('event_id', $this);
+        Validations::notEmpty('email', $this);
     }
 
     public function __set(string $property, mixed $value): void

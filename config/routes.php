@@ -7,7 +7,9 @@ use App\Controllers\AdminController;
 use App\Controllers\MembersController;
 use Core\Router\Route;
 
-Route::get('/', [HomeController::class, 'index'])->name('root');
+Route::get('/', [HomeController::class, 'index'])->name('public.index');
+Route::get('/home/{event_id}', [HomeController::class, 'show'])->name('public.show');
+
 Route::get('/login', [AuthController::class, 'new'])->name('users.login');
 Route::post('/login', [AuthController::class, 'authenticate'])->name('users.authenticate');
 
