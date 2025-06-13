@@ -26,18 +26,17 @@ class ParticipantController extends Controller
             page: $page,
             per_page: $perPage,
             from: 'participants',
-            attributes: ['id', 'name', 'email', 'check_in', 'check_out'],
+            attributes: ['id', 'name', 'email'],
             conditions: ['event_id' => $eventId],
-            route: 'participants.index',
+            route: 'participants.index'
         );
 
         $event = Event::findById($eventId);
         $participants = $paginator->registers();
-
         $this->render('user/events/participants/index', compact('title', 'participants', 'paginator', 'event'));
     }
 
-    public function subscribe(Request $request): void
+    public function register(Request $request): void
     {
         $params = $request->getParams();
         $params['participant']['event_id'] = $params['event_id'];
@@ -50,5 +49,18 @@ class ParticipantController extends Controller
         }
 
         $this->redirectTo(route('public.show', ['event_id' => $params['event_id']]));
+    }
+
+    public function remove(Request $request): void
+    {
+        $params = $request->getParams();
+        $participant = Participant::findById($params['participant_id']);
+        if ($participant && $participant->event_id == $params['event_id']) {
+            $participant->destroy();
+            FlashMessage::success('Participant removed successfully!');
+        } else {
+            FlashMessage::danger('Could not remove participant.');
+        }
+        $this->redirectTo(route('participants.index', ['event_id' => $params['event_id']]));
     }
 }

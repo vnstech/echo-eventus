@@ -7,6 +7,7 @@ use App\Models\Event;
 use Tests\Acceptance\BaseAcceptanceCest;
 use Tests\Support\AcceptanceTester;
 use App\Models\UserEvent;
+use App\Models\Participant;
 
 class EventCest extends BaseAcceptanceCest
 {
@@ -363,5 +364,99 @@ class EventCest extends BaseAcceptanceCest
         $page->login($user2->email, $user2->password);
         $page->amOnPage("/events");
         $page->dontSee($event->name);
+    }
+
+    public function seeRelationParticipantEvent(AcceptanceTester $page): void
+    {
+        $user = new User([
+            'name' => 'User 1',
+            'email' => 'user@example.com',
+            'password' => '123456',
+            'password_confirmation' => '123456'
+        ]);
+        $user->save();
+
+        $event = new Event([
+            'name' => "Event With Participant",
+            'start_date' => '2025-06-01T09:00',
+            'finish_date' => '2025-06-01T18:00',
+            'owner_id' => $user->id,
+            'status' => 'upcoming',
+            'description' => 'Event for participant relation test',
+            'location_name' => 'Test Location',
+            'address' => 'Test Address',
+            'category' => '',
+            'two_fa_check_attendance' => false
+        ]);
+        $event->save();
+
+        $pivot = new UserEvent([
+        'user_id' => $user->id,
+        'event_id' => $event->id,
+        ]);
+        $pivot->save();
+
+        $participant = new Participant([
+            'event_id' => $event->id,
+            'name' => 'Participant 1',
+            'email' => 'participant1@example.com',
+            'check_in' => false,
+            'check_out' => false
+        ]);
+        $participant->save();
+
+        $page->login($user->email, $user->password);
+        $page->amOnPage("/events/{$event->id}/participants");
+
+        $page->see($participant->name);
+        $page->see($participant->email);
+    }
+
+    public function removeRelationParticipantEvent(AcceptanceTester $page): void
+    {
+        $user = new User([
+        'name' => 'User 1',
+        'email' => 'user@example.com',
+        'password' => '123456',
+        'password_confirmation' => '123456'
+        ]);
+        $user->save();
+
+        $event = new Event([
+        'name' => "Event With Participant",
+        'start_date' => '2025-06-01T09:00',
+        'finish_date' => '2025-06-01T18:00',
+        'owner_id' => $user->id,
+        'status' => 'upcoming',
+        'description' => 'Event for participant relation test',
+        'location_name' => 'Test Location',
+        'address' => 'Test Address',
+        'category' => '',
+        'two_fa_check_attendance' => false
+        ]);
+        $event->save();
+
+        $pivot = new UserEvent([
+        'user_id' => $user->id,
+        'event_id' => $event->id,
+        ]);
+        $pivot->save();
+
+        $participant = new Participant([
+        'event_id' => $event->id,
+        'name' => 'Participant 1',
+        'email' => 'participant1@example.com',
+        'check_in' => false,
+        'check_out' => false
+        ]);
+        $participant->save();
+
+        $page->login($user->email, $user->password);
+        $page->amOnPage("/events/{$event->id}/participants");
+        $page->click('button[data-bs-target="#deleteModal-' . $participant->id . '"]');
+        $page->waitForElementVisible('#deleteModal-' . $participant->id);
+        $page->click('#deleteModal-' . $participant->id . ' form button[type=submit]');
+        $page->dontSee($participant->name);
+        $page->dontSee($participant->email);
     }
 }

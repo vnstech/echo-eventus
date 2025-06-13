@@ -18,19 +18,48 @@
                     <div>
                         <h5 class="card-title mb-0"><?= htmlspecialchars($participant->name) ?></h5>
                         <p class="card-text text-muted small mb-0"><?= htmlspecialchars($participant->email) ?></p>
-                        <?php if ($participant->check_in): ?>
-                            <span class="badge bg-success">Checked In</span>
-                        <?php endif; ?>
-                        <?php if ($participant->check_out): ?>
-                            <span class="badge bg-secondary">Checked Out</span>
-                        <?php endif; ?>
+                    </div>
+                        <button
+                            type="button"
+                            class="btn btn-link p-0 m-0"
+                            data-bs-toggle="modal"
+                            data-bs-target="#deleteModal-<?= $participant->id ?>"
+                        >
+                            <i class="bi bi-trash3 text-danger-custom fs-5"></i>
+                        </button>
+                </div>
+            </div>
+            <?php if (isset($event)): ?>
+            <div
+                class="modal fade"
+                id="deleteModal-<?= $participant->id ?>"
+                tabindex="-1"
+                aria-labelledby="deleteModalLabel-<?= $participant->id ?>"
+                aria-hidden="true"
+            >
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteModalLabel-<?= $participant->id ?>">Remove Participant</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to remove <strong><?= htmlspecialchars($participant->name) ?></strong> from this event?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <form method="post" action="<?= route('participants.remove', ['event_id' => $event->id, 'participant_id' => $participant->id]) ?>">
+                                <button type="submit" class="btn btn-danger">Remove</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
+            <?php endif; ?>
         <?php endforeach; ?>
     <?php endif; ?>
 
-    <?php if (!empty($participants) && isset($paginator)): ?>
+    <?php if (!empty($participants)): ?>
         <div class="d-flex justify-content-center mt-4">
             <?php $paginator->renderPagesNavigation(); ?>
         </div>

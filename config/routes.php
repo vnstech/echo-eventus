@@ -10,7 +10,7 @@ use Core\Router\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('public.index');
 Route::get('/home/{event_id}', [HomeController::class, 'show'])->name('public.show');
-Route::post('/home/{event_id}/subscribe', [ParticipantController::class, 'subscribe'])->name('public.subscribe');
+Route::post('/home/{event_id}/subscribe', [ParticipantController::class, 'register'])->name('public.subscribe');
 
 Route::get('/login', [AuthController::class, 'new'])->name('users.login');
 Route::post('/login', [AuthController::class, 'authenticate'])->name('users.authenticate');
@@ -30,6 +30,7 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/events/{event_id}/members', [MembersController::class, 'index'])->name('members.index');
         Route::get('/events/{event_id}/participants', [ParticipantController::class, 'index'])->name('participants.index');
+        Route::post('/events/{event_id}/participants/{participant_id}/remove', [ParticipantController::class, 'remove'])->name('participants.remove');
 
         Route::middleware('event_owner')->group(function () {
             Route::get('/events/{event_id}/members/new', [MembersController::class, 'new'])->name('members.new');
