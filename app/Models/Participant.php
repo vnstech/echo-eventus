@@ -30,6 +30,16 @@ class Participant extends Model
     {
         Validations::notEmpty('event_id', $this);
         Validations::notEmpty('email', $this);
+
+        if ($this->event_id && $this->email) {
+            $exists = self::findBy([
+                'event_id' => $this->event_id,
+                'email' => $this->email
+            ]);
+            if ($exists && ($this->newRecord() || $exists->id != $this->id)) {
+                $this->addError('email', 'já está inscrito neste evento!');
+            }
+        }
     }
 
     public function __set(string $property, mixed $value): void

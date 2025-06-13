@@ -5,10 +5,12 @@ use App\Controllers\AuthController;
 use App\Controllers\EventsController;
 use App\Controllers\AdminController;
 use App\Controllers\MembersController;
+use App\Controllers\ParticipantController;
 use Core\Router\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('public.index');
 Route::get('/home/{event_id}', [HomeController::class, 'show'])->name('public.show');
+Route::post('/home/{event_id}/subscribe', [ParticipantController::class, 'subscribe'])->name('public.subscribe');
 
 Route::get('/login', [AuthController::class, 'new'])->name('users.login');
 Route::post('/login', [AuthController::class, 'authenticate'])->name('users.authenticate');
