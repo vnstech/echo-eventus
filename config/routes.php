@@ -29,6 +29,7 @@ Route::middleware('auth')->group(function () {
         Route::delete('/event/{event_id}', [EventsController::class, 'destroy'])->name('events.destroy');
 
         Route::get('/events/{event_id}/members', [MembersController::class, 'index'])->name('members.index');
+        Route::get('/events/{event_id}/participants', [ParticipantController::class, 'index'])->name('participants.index');
 
         Route::middleware('event_owner')->group(function () {
             Route::get('/events/{event_id}/members/new', [MembersController::class, 'new'])->name('members.new');

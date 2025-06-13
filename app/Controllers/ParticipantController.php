@@ -5,10 +5,38 @@ namespace App\Controllers;
 use Core\Http\Controllers\Controller;
 use Core\Http\Request;
 use App\Models\Participant;
+use App\Models\Event;
 use Lib\FlashMessage;
 
 class ParticipantController extends Controller
 {
+    public function index(Request $request): void
+    {
+        $eventId = $request->getParam('event_id');
+        $title = 'Participants';
+
+        $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int) $_GET['page'] : 1;
+        if ($page < 1) {
+            $page = 1;
+        }
+
+        $perPage = 12;
+
+        $paginator = Participant::paginate(
+            page: $page,
+            per_page: $perPage,
+            from: 'participants',
+            attributes: ['id', 'name', 'email', 'check_in', 'check_out'],
+            conditions: ['event_id' => $eventId],
+            route: 'participants.index',
+        );
+
+        $event = Event::findById($eventId);
+        $participants = $paginator->registers();
+
+        $this->render('user/events/participants/index', compact('title', 'participants', 'paginator', 'event'));
+    }
+
     public function subscribe(Request $request): void
     {
         $params = $request->getParams();
