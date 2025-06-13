@@ -30,7 +30,8 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/events/{event_id}/members', [MembersController::class, 'index'])->name('members.index');
         Route::get('/events/{event_id}/participants', [ParticipantController::class, 'index'])->name('participants.index');
-        Route::post('/events/{event_id}/participants/{participant_id}/remove', [ParticipantController::class, 'remove'])->name('participants.remove');
+        Route::post('/events/{event_id}/participants/{participant_id}/remove', [ParticipantController::class, 'remove'])
+            ->name('participants.remove');
 
         Route::middleware('event_owner')->group(function () {
             Route::get('/events/{event_id}/members/new', [MembersController::class, 'new'])->name('members.new');
