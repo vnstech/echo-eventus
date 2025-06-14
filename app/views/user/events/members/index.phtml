@@ -1,15 +1,18 @@
 <div class="container py-5">
 
-    <div class="d-flex justify-content-between align-items-center mb-5 position-relative">
-
-        <a href="/events" class="btn btn-outline-primary">
+    <div class="position-relative text-center mb-5">
+        <a href="/events" class="btn btn-outline-primary position-absolute start-0 top-0">
             <i class="bi bi-arrow-left"></i> Back to Events
         </a>
+
+        <h1 class="fw-bold text-primary">Members</h1>
+        <p class="text-muted mb-0">All the members associated with this event</p>
+
         <?php if ($this->current_user->id == $event->owner_id): ?>
-            <a  
+            <a
                 href="<?= route('members.new', ['event_id' => $event->id]) ?>"
-                type="button" 
-                class="btn btn-outline-primary"
+                type="button"
+                class="btn btn-outline-primary position-absolute end-0 top-0"
             >
                 <i class="bi bi-plus text-danger-custom fs-5"></i>
             </a>
@@ -45,7 +48,7 @@
             </div>
 
             <?php if ($is_owner && $member->id !== $event->owner_id): ?>
-                <div 
+                <div
                     class="modal fade"
                     id="deleteModal-<?= $member->id ?>"
                     tabindex="-1"
@@ -79,7 +82,7 @@
 
     <?php endif; ?>
 
-    
+
     <?php if (!empty($members)): ?>
         <div class="d-flex justify-content-center mt-4">
             <?php $paginator->renderPagesNavigation(); ?>

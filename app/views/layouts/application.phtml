@@ -26,12 +26,19 @@
         </div>
 
         <div class="d-flex align-items-center gap-2">
-            <a href="/events/new" class="btn btn-header-outline d-flex align-items-center gap-1">
-                <i class="bi bi-plus"></i> Create Event
-            </a>
-            <a href="/logout" class="btn btn-header-outline">
-                <i class="bi bi-arrow-left"></i> Logout
-            </a>
+            <?php if (isset($this->current_user) && $this->current_user): ?>
+                <span class="text-white me-2"><?= htmlspecialchars($this->current_user->name) ?></span>
+                <a href="/events/new" class="btn btn-header-outline d-flex align-items-center gap-1">
+                    <i class="bi bi-plus"></i> Create Event
+                </a>
+                <a href="/logout" class="btn btn-header-outline">
+                    <i class="bi bi-arrow-left"></i> Logout
+                </a>
+            <?php else: ?>
+                <a href="/login" class="btn btn-header-outline">
+                    <i class="bi bi-box-arrow-in-right"></i> Login
+                </a>
+            <?php endif; ?>
         </div>
     </header>
 
