@@ -38,6 +38,6 @@ class AuthController extends Controller
     {
         Auth::logout();
         FlashMessage::success('Logout successful!');
-        $this->redirectTo(route('users.login'));
+        $this->redirectTo(route('public.index'));
     }
 }

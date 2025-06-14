@@ -1,0 +1,59 @@
+<div class="container py-5">
+
+    <div class="position-relative text-center mb-5">
+        <a href="/" class="btn btn-outline-primary position-absolute start-0 top-0">
+            <i class="bi bi-arrow-left"></i> Back to Home
+        </a>
+
+        <h1 class="fw-bold text-primary"><?= $event->name ?> Details</h1>
+        <p class="text-muted mb-0">All the information you need about this event</p>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white fw-bold text-primary d-flex justify-content-between align-items-center">
+            <div>
+                <i class="bi bi-calendar-event me-2"></i> <?= $event->name ?>
+            </div>
+        </div>
+        <div class="card-body">
+            <p class="text-muted">Event details are listed below.</p>
+            <ul class="list-unstyled">
+                <li><strong>Description:</strong> <?= $event->description ?></li>
+                <li><strong>Category:</strong> <?= $event->category ?></li>
+                <li><strong>Start:</strong> <?= $event->start_date ?></li>
+                <li><strong>End:</strong> <?= $event->finish_date ?></li>
+                <li><strong>Location:</strong> <?= $event->location_name ?> - <?= $event->address ?></li>
+                <li>
+                    <button type="button" class="btn btn-outline-primary mt-2" data-bs-toggle="modal" data-bs-target="#subscribeModal">
+                        <i class="bi bi-person plus"></i> Register
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="modal fade" id="subscribeModal" tabindex="-1" aria-labelledby="subscribeModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <form method="POST" action="<?= route('public.subscribe', ['event_id' => $event->id]) ?>">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="subscribeModalLabel">Register for the event</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body">
+                  <div class="mb-3">
+                    <label for="participantName" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="participantName" name="participant[name]" required>
+                  </div>
+                  <div class="mb-3">
+                    <label for="participantEmail" class="form-label">E-mail</label>
+                    <input type="email" class="form-control" id="participantEmail" name="participant[email]" required>
+                  </div>
+                </div>
+                <div class="modal-footer justify-content-center">
+                  <button type="submit" class="btn btn-primary">Register</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+    </div>
