@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use App\Services\EventAvatar;
 use Lib\Validations;
 use Core\Database\ActiveRecord\Model;
-use Core\Database\ActiveRecord\BelongsTo;
 use Core\Database\ActiveRecord\HasMany;
 
 /**
@@ -33,7 +33,8 @@ class Event extends Model
         'location_name',
         'address',
         'category',
-        'two_fa_check_attendance'
+        'two_fa_check_attendance',
+        'avatar_name',
     ];
 
     public function validates(): void
@@ -60,5 +61,10 @@ class Event extends Model
     public function usersEvents(): HasMany
     {
         return $this->hasMany(UserEvent::class, 'event_id');
+    }
+
+    public function avatar(): EventAvatar
+    {
+        return new EventAvatar($this, ['extension' => ['png', 'jpg', 'jpeg'], 'size' => 2 * 1024 * 1024]);
     }
 }

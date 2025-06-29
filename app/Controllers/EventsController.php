@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Services\EventAvatar;
 use App\Models\Event;
 use Core\Http\Controllers\Controller;
 use Core\Http\Request;
@@ -35,7 +36,8 @@ class EventsController extends Controller
                 'location_name',
                 'address',
                 'category',
-                'two_fa_check_attendance'
+                'two_fa_check_attendance',
+                'avatar_name',
             ],
             conditions: ['users_events.user_id' => $this->current_user->id],
             route: 'events.index'
@@ -62,6 +64,10 @@ class EventsController extends Controller
         $event = new Event($params['event']);
 
         if ($event->save()) {
+            if (!empty($_FILES['avatar_name']) && $_FILES['avatar_name']['error'] === UPLOAD_ERR_OK) {
+                $event->avatar()->update($_FILES['avatar_name']);
+            }
+
             $usersEvents = new UserEvent([
                 'user_id' => $this->current_user->id,
                 'event_id' => $event->id
@@ -81,6 +87,7 @@ class EventsController extends Controller
             $this->render('user/events/new', compact('title'));
         }
     }
+
 
     public function show(Request $request): void
     {
@@ -121,10 +128,27 @@ class EventsController extends Controller
             return;
         }
 
-        $result = $event->update(['name' => $params['name']]);
+        $eventUpdated = $event->update(['name' => $params['name']]);
 
-        if ($result) {
+        if ($eventUpdated === false && !$event->hasErrors()) {
+            $eventUpdated = true;
+        }
+
+        $imageUpdated = true;
+        if (!isset($params['remove_avatar'])) {
+            if (isset($_FILES['avatar_name']) && $_FILES['avatar_name']['error'] === UPLOAD_ERR_OK) {
+                $event->avatar()->update($_FILES['avatar_name']);
+            }
+        } else { 
+            $event->avatar_name = null;
+            $event->save();
+        }
+
+        if ($eventUpdated && $imageUpdated) {
             FlashMessage::success('Event updated successfully!');
+            $this->redirectTo(route('events.index'));
+        } elseif ($eventUpdated && !$imageUpdated) {
+            FlashMessage::danger('Event updated, but the image was invalid or could not be uploaded.');
             $this->redirectTo(route('events.index'));
         } else {
             FlashMessage::danger('Error updating event. Please check the data!');
@@ -132,6 +156,7 @@ class EventsController extends Controller
             $this->render('/user/events/edit', compact('title', 'event'));
         }
     }
+
 
     public function destroy(Request $request): void
     {

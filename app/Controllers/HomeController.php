@@ -27,16 +27,18 @@ class HomeController extends Controller
             page: $page,
             per_page: $perPage,
             from: 'events',
-            attributes: [
+            attributes: [ 
                 'name',
                 'start_date',
                 'finish_date',
+                'owner_id',
                 'status',
                 'description',
                 'location_name',
                 'address',
                 'category',
-                'two_fa_check_attendance'
+                'two_fa_check_attendance',
+                'avatar_name',
             ],
             route: 'public.index'
         );

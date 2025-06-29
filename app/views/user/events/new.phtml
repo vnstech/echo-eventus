@@ -8,7 +8,7 @@
         <p class="text-muted mb-0">Fill out the information below to create your event</p>
     </div>
 
-    <form method="POST" action="/events/create">
+    <form method="POST" action="/events/create" enctype="multipart/form-data">
         <div class="card shadow-sm mb-4">
             <div class="card-header bg-white fw-bold text-primary">
                 <i class="bi bi-calendar3 me-2"></i> Basic Information
@@ -32,11 +32,11 @@
                     </select>
                 </div>
 
-                <!-- <div class="mb-3">
-                    <label class="form-label">Event Image</label>
-                    <input type="file" name="imagem" class="form-control">
-                    <div class="form-text">PNG, JPG or GIF up to 10MB</div>
-                </div> -->
+                <div class="mb-3">
+                    <label for="avatar" class="form-label">Event Avatar</label>
+                    <input type="file" class="form-control" id="avatar_name" name="avatar_name" accept=".jpg,.jpeg,.png">
+                    <div class="form-text">PNG ou JPG com até 2MB</div>
+                </div>
             </div>
         </div>
 
@@ -69,7 +69,6 @@
                     >
                 </div>
             </div>
-
         </div>
 
         <div class="card shadow-sm mb-4">
