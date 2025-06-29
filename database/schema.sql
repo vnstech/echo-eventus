@@ -23,8 +23,7 @@ CREATE TABLE events (
     location_name VARCHAR(100),
     address VARCHAR(200),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    -- logo_name VARCHAR(60),
-    -- background_name VARCHAR(60),
+    avatar_name VARCHAR(60),
     category VARCHAR(100),
     two_fa_check_attendance BOOLEAN,
     FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE
