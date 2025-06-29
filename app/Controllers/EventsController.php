@@ -139,16 +139,13 @@ class EventsController extends Controller
             if (isset($_FILES['avatar_name']) && $_FILES['avatar_name']['error'] === UPLOAD_ERR_OK) {
                 $event->avatar()->update($_FILES['avatar_name']);
             }
-        } else { 
+        } else {
             $event->avatar_name = null;
             $event->save();
         }
 
-        if ($eventUpdated && $imageUpdated) {
+        if ($eventUpdated) {
             FlashMessage::success('Event updated successfully!');
-            $this->redirectTo(route('events.index'));
-        } elseif ($eventUpdated && !$imageUpdated) {
-            FlashMessage::danger('Event updated, but the image was invalid or could not be uploaded.');
             $this->redirectTo(route('events.index'));
         } else {
             FlashMessage::danger('Error updating event. Please check the data!');

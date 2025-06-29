@@ -27,7 +27,7 @@ class HomeController extends Controller
             page: $page,
             per_page: $perPage,
             from: 'events',
-            attributes: [ 
+            attributes: [
                 'name',
                 'start_date',
                 'finish_date',

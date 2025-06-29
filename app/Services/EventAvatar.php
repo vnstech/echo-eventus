@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use Core\Constants\Constants;
-use Core\Database\ActiveRecord\Model;
+use App\Models\Event;
 
 class EventAvatar
 {
@@ -11,26 +11,25 @@ class EventAvatar
     private array $image;
 
     public function __construct(
-        private Model $model,
+        private Event $model,
         /** @var array<string, string|array<string>> $validations */
         private array $validations = []
     ) {
     }
 
-public function path(): string
-{
-    if ($this->model->avatar_name) {
-        $fullPath = $this->getAbsoluteSavedFilePath();
+    public function path(): string
+    {
+        if ($this->model->avatar_name) {
+            $fullPath = $this->getAbsoluteSavedFilePath();
 
-        if (file_exists($fullPath)) {
-            $hash = md5_file($fullPath);
-            return $this->baseDir() . $this->model->avatar_name . "?" . $hash;
+            if (file_exists($fullPath)) {
+                $hash = md5_file($fullPath);
+                return $this->baseDir() . $this->model->avatar_name . "?" . $hash;
+            }
         }
+
+        return "/assets/images/defaults/avatar.png";
     }
-
-    return "/assets/images/defaults/avatar.png";
-}
-
 
     /**
      * @param array<string, mixed> $image

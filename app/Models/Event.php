@@ -19,6 +19,7 @@ use Core\Database\ActiveRecord\HasMany;
  * @property string $address
  * @property string $category
  * @property bool $two_fa_check_attendance
+ * @property string|null $avatar_name
  */
 class Event extends Model
 {
@@ -65,6 +66,9 @@ class Event extends Model
 
     public function avatar(): EventAvatar
     {
-        return new EventAvatar($this, ['extension' => ['png', 'jpg', 'jpeg'], 'size' => 2 * 1024 * 1024]);
+        return new EventAvatar($this, [
+            'extension' => ['png', 'jpg', 'jpeg'],
+            'size' => (string)(2 * 1024 * 1024),
+        ]);
     }
 }
