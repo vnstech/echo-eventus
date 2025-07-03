@@ -25,10 +25,10 @@
 
                 <div class="mb-3">
                     <label class="form-label">Current Image</label><br>
-                    <img 
-                        src="<?= htmlspecialchars($event->avatar()->path()) ?>" 
-                        alt="Current Event Image" 
-                        class="img-fluid rounded" 
+                    <img
+                        src="<?= htmlspecialchars($event->avatar()->path()) ?>"
+                        alt="Current Event Image"
+                        class="img-fluid rounded"
                         style="max-height: 200px; object-fit: cover;"
                     >
                 </div>
@@ -47,7 +47,7 @@
         </div>
 
         <div class="d-flex justify-content-center gap-2">
-            <button type="submit" class="btn btn-primary">Update Event</button>
+            <button id="submitEventAvatar" type="submit" class="btn btn-primary">Update Event</button>
         </div>
     </form>
 </div>

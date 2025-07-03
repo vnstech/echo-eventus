@@ -12,7 +12,7 @@ class EventAvatar
 
     public function __construct(
         private Event $model,
-        /** @var array<string, string|array<string>> $validations */
+        /** @var array<string, string|array<string>|int> $validations */
         private array $validations = []
     ) {
     }
