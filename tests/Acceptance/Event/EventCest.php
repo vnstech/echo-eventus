@@ -465,4 +465,44 @@ class EventCest extends BaseAcceptanceCest
         $page->dontSee($participant->name);
         $page->dontSee($participant->email);
     }
+
+    public function testUploadAvatarEvent(AcceptanceTester $page): void
+    {
+        $user = new User([
+            'name' => 'User',
+            'email' => 'user@example.com',
+            'password' => '123456',
+            'password_confirmation' => '123456',
+        ]);
+        $user->save();
+
+        $event = new Event([
+            'name' => "Event With Avatar",
+            'start_date' => '2025-06-01T09:00',
+            'finish_date' => '2025-06-01T18:00',
+            'owner_id' => $user->id,
+            'status' => 'upcoming',
+            'description' => 'Event image test',
+            'location_name' => 'Test Location',
+            'address' => 'Test Address',
+            'category' => '',
+            'two_fa_check_attendance' => false,
+        ]);
+        $event->save();
+
+        $pivot = new UserEvent([
+            'user_id' => $user->id,
+            'event_id' => $event->id,
+        ]);
+        $pivot->save();
+
+        $page->login($user->email, $user->password);
+        $page->amOnPage("/events/{$event->id}/edit");
+
+        $page->seeElement('#eventAvatar');
+        $page->attachFile('#eventAvatar', 'avatar_test.png');
+
+        $page->executeJS('document.querySelector("#submitEventAvatar").click()');
+        $page->see('Event updated successfully!');
+    }
 }
