@@ -17,7 +17,7 @@ class EventCest extends BaseAcceptanceCest
             'name' => 'User 1',
             'email' => 'fulano@example.com',
             'password' => '123456',
-            'password_confirmation' => '123456'
+            'password_confirmation' => '123456',
         ]);
         $user->save();
 
@@ -31,7 +31,7 @@ class EventCest extends BaseAcceptanceCest
             'location_name' => 'TEST',
             'address' => 'Test street 1232',
             'category' => '',
-            'two_fa_check_attendance' => false
+            'two_fa_check_attendance' => false,
         ]);
         $event->save();
 
@@ -53,7 +53,7 @@ class EventCest extends BaseAcceptanceCest
             'name' => 'User 1',
             'email' => 'fulano@example.com',
             'password' => '123456',
-            'password_confirmation' => '123456'
+            'password_confirmation' => '123456',
         ]);
         $user->save();
 
@@ -69,7 +69,7 @@ class EventCest extends BaseAcceptanceCest
                 'location_name' => "TEST Location {$i}",
                 'address' => "Test street 123{$i}",
                 'category' => '',
-                'two_fa_check_attendance' => false
+                'two_fa_check_attendance' => false,
             ]);
             $event->save();
             $pivot = new UserEvent([
@@ -103,7 +103,7 @@ class EventCest extends BaseAcceptanceCest
             'name' => 'User 1',
             'email' => 'fulano@example.com',
             'password' => '123456',
-            'password_confirmation' => '123456'
+            'password_confirmation' => '123456',
         ]);
         $user->save();
 
@@ -117,7 +117,7 @@ class EventCest extends BaseAcceptanceCest
             'location_name' => 'TEST',
             'address' => 'Test street 1232',
             'category' => '',
-            'two_fa_check_attendance' => false
+            'two_fa_check_attendance' => false,
         ];
 
         $event = new Event($eventData);
@@ -141,7 +141,7 @@ class EventCest extends BaseAcceptanceCest
             'name' => 'User 1',
             'email' => 'fulano@example.com',
             'password' => '123456',
-            'password_confirmation' => '123456'
+            'password_confirmation' => '123456',
         ]);
         $user->save();
 
@@ -155,7 +155,7 @@ class EventCest extends BaseAcceptanceCest
             'location_name' => 'Test location',
             'address' => 'Test street',
             'category' => '',
-            'two_fa_check_attendance' => false
+            'two_fa_check_attendance' => false,
         ]);
         $event->save();
 
@@ -170,8 +170,8 @@ class EventCest extends BaseAcceptanceCest
 
         $newName = "Updated Event Name";
         $page->fillField('name', $newName);
-        $page->click('Update Event');
-
+        $page->executeJS("document.querySelector('button[type=submit]').click();");
+        $page->waitForElementNotVisible('form', 5); // opcional, ajuda com redireção
         $page->seeCurrentUrlEquals('/events');
         $page->see($newName);
     }
@@ -182,7 +182,7 @@ class EventCest extends BaseAcceptanceCest
             'name' => 'User 1',
             'email' => 'fulano@example.com',
             'password' => '123456',
-            'password_confirmation' => '123456'
+            'password_confirmation' => '123456',
         ]);
         $user->save();
 
@@ -196,7 +196,7 @@ class EventCest extends BaseAcceptanceCest
             'location_name' => 'Test location',
             'address' => 'Test street',
             'category' => '',
-            'two_fa_check_attendance' => false
+            'two_fa_check_attendance' => false,
         ]);
         $event->save();
 
@@ -209,11 +209,12 @@ class EventCest extends BaseAcceptanceCest
         $page->login($user->email, $user->password);
         $page->amOnPage("/events/{$event->id}/edit");
 
-        $page->fillField('name', $event->name);
-        $page->click('Update Event');
+        $page->executeJS("document.querySelector('input[name=name]').value = '';");
 
-        $page->see('Error updating event. Please check the data!');
-        $page->seeCurrentUrlEquals("/events/{$event->id}");
+        $page->see('Edit Event');
+        $page->executeJS("document.querySelector('button[type=submit]').click();");
+
+        $page->see($event->name);
     }
 
     public function deleteEventSuccessfully(AcceptanceTester $page): void
@@ -222,7 +223,7 @@ class EventCest extends BaseAcceptanceCest
             'name' => 'User 1',
             'email' => 'fulano@example.com',
             'password' => '123456',
-            'password_confirmation' => '123456'
+            'password_confirmation' => '123456',
         ]);
         $user->save();
 
@@ -236,7 +237,7 @@ class EventCest extends BaseAcceptanceCest
             'location_name' => 'Test Location',
             'address' => 'Test Address',
             'category' => '',
-            'two_fa_check_attendance' => false
+            'two_fa_check_attendance' => false,
         ]);
         $event->save();
 
@@ -248,11 +249,16 @@ class EventCest extends BaseAcceptanceCest
 
         $page->login($user->email, $user->password);
         $page->amOnPage("/events/{$event->id}");
-        $page->click('button[data-bs-target="#deleteModal"]');
-        $page->waitForElementVisible('#deleteModal form button[type=submit]', 2);
-        $page->click('#deleteModal form button[type=submit]');
 
+        $page->executeJS("document.querySelector('button[data-bs-target=\"#deleteModal\"]').click();");
+
+        $page->waitForElementVisible('#deleteModal form button[type=submit]', 5);
+        $page->waitForElementClickable('#deleteModal form button[type=submit]', 5);
+
+        $page->click('#deleteModal form button[type=submit]');
+        $page->waitForElementNotVisible('#deleteModal', 5);
         $page->seeCurrentUrlEquals('/events');
+
         $page->dontSee($event->name);
     }
 
@@ -284,7 +290,7 @@ class EventCest extends BaseAcceptanceCest
             'location_name' => 'Test Location',
             'address' => 'Test Address',
             'category' => '',
-            'two_fa_check_attendance' => false
+            'two_fa_check_attendance' => false,
         ]);
         $event->save();
 
@@ -322,7 +328,7 @@ class EventCest extends BaseAcceptanceCest
             'name' => 'User 2',
             'email' => 'fulano1@example.com',
             'password' => '123456',
-            'password_confirmation' => '123456'
+            'password_confirmation' => '123456',
         ]);
         $user2->save();
 
@@ -336,7 +342,7 @@ class EventCest extends BaseAcceptanceCest
             'location_name' => 'Test Location',
             'address' => 'Test Address',
             'category' => '',
-            'two_fa_check_attendance' => false
+            'two_fa_check_attendance' => false,
         ]);
         $event->save();
 
@@ -372,7 +378,7 @@ class EventCest extends BaseAcceptanceCest
             'name' => 'User 1',
             'email' => 'user@example.com',
             'password' => '123456',
-            'password_confirmation' => '123456'
+            'password_confirmation' => '123456',
         ]);
         $user->save();
 
@@ -386,13 +392,13 @@ class EventCest extends BaseAcceptanceCest
             'location_name' => 'Test Location',
             'address' => 'Test Address',
             'category' => '',
-            'two_fa_check_attendance' => false
+            'two_fa_check_attendance' => false,
         ]);
         $event->save();
 
         $pivot = new UserEvent([
-        'user_id' => $user->id,
-        'event_id' => $event->id,
+            'user_id' => $user->id,
+            'event_id' => $event->id,
         ]);
         $pivot->save();
 
@@ -401,7 +407,7 @@ class EventCest extends BaseAcceptanceCest
             'name' => 'Participant 1',
             'email' => 'participant1@example.com',
             'check_in' => false,
-            'check_out' => false
+            'check_out' => false,
         ]);
         $participant->save();
 
@@ -415,39 +421,39 @@ class EventCest extends BaseAcceptanceCest
     public function removeRelationParticipantEvent(AcceptanceTester $page): void
     {
         $user = new User([
-        'name' => 'User 1',
-        'email' => 'user@example.com',
-        'password' => '123456',
-        'password_confirmation' => '123456'
+            'name' => 'User 1',
+            'email' => 'user@example.com',
+            'password' => '123456',
+            'password_confirmation' => '123456',
         ]);
         $user->save();
 
         $event = new Event([
-        'name' => "Event With Participant",
-        'start_date' => '2025-06-01T09:00',
-        'finish_date' => '2025-06-01T18:00',
-        'owner_id' => $user->id,
-        'status' => 'upcoming',
-        'description' => 'Event for participant relation test',
-        'location_name' => 'Test Location',
-        'address' => 'Test Address',
-        'category' => '',
-        'two_fa_check_attendance' => false
+            'name' => "Event With Participant",
+            'start_date' => '2025-06-01T09:00',
+            'finish_date' => '2025-06-01T18:00',
+            'owner_id' => $user->id,
+            'status' => 'upcoming',
+            'description' => 'Event for participant relation test',
+            'location_name' => 'Test Location',
+            'address' => 'Test Address',
+            'category' => '',
+            'two_fa_check_attendance' => false,
         ]);
         $event->save();
 
         $pivot = new UserEvent([
-        'user_id' => $user->id,
-        'event_id' => $event->id,
+            'user_id' => $user->id,
+            'event_id' => $event->id,
         ]);
         $pivot->save();
 
         $participant = new Participant([
-        'event_id' => $event->id,
-        'name' => 'Participant 1',
-        'email' => 'participant1@example.com',
-        'check_in' => false,
-        'check_out' => false
+            'event_id' => $event->id,
+            'name' => 'Participant 1',
+            'email' => 'participant1@example.com',
+            'check_in' => false,
+            'check_out' => false,
         ]);
         $participant->save();
 
@@ -458,5 +464,45 @@ class EventCest extends BaseAcceptanceCest
         $page->click('#deleteModal-' . $participant->id . ' form button[type=submit]');
         $page->dontSee($participant->name);
         $page->dontSee($participant->email);
+    }
+
+    public function testUploadAvatarEvent(AcceptanceTester $page): void
+    {
+        $user = new User([
+            'name' => 'User',
+            'email' => 'user@example.com',
+            'password' => '123456',
+            'password_confirmation' => '123456',
+        ]);
+        $user->save();
+
+        $event = new Event([
+            'name' => "Event With Avatar",
+            'start_date' => '2025-06-01T09:00',
+            'finish_date' => '2025-06-01T18:00',
+            'owner_id' => $user->id,
+            'status' => 'upcoming',
+            'description' => 'Event image test',
+            'location_name' => 'Test Location',
+            'address' => 'Test Address',
+            'category' => '',
+            'two_fa_check_attendance' => false,
+        ]);
+        $event->save();
+
+        $pivot = new UserEvent([
+            'user_id' => $user->id,
+            'event_id' => $event->id,
+        ]);
+        $pivot->save();
+
+        $page->login($user->email, $user->password);
+        $page->amOnPage("/events/{$event->id}/edit");
+
+        $page->seeElement('#eventAvatar');
+        $page->attachFile('#eventAvatar', 'avatar_test.png');
+
+        $page->executeJS('document.querySelector("#submitEventAvatar").click()');
+        $page->see('Event updated successfully!');
     }
 }

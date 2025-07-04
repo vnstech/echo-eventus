@@ -1,33 +1,53 @@
 <div class="container py-5">
-
     <div class="position-relative text-center mb-5">
         <a href="/events" class="btn btn-outline-primary position-absolute start-0 top-0">
             <i class="bi bi-arrow-left"></i> Back to Events
         </a>
 
         <h1 class="fw-bold text-primary">Edit Event</h1>
-        <p class="text-muted">Update the <?= $event->name ?></p>
+        <p class="text-muted">Update the <?= htmlspecialchars($event->name) ?></p>
     </div>
 
-    <form action="/events/<?= $event->id ?>" method="POST">
+    <form action="/events/<?= $event->id ?>" method="POST" enctype="multipart/form-data">
         <input type="hidden" name="_method" value="PUT">
-
         <input type="hidden" name="event" value="<?= $event->id ?>">
 
         <div class="card shadow-sm mb-4">
             <div class="card-header bg-white fw-bold text-primary">
-                <i class="bi bi-pencil-square me-2"></i> Edit Event Name
+                <i class="bi bi-pencil-square me-2"></i> Edit Event
             </div>
             <div class="card-body">
+
                 <div class="mb-3">
                     <label for="eventName" class="form-label">Event Name</label>
                     <input type="text" class="form-control" id="eventName" name="name" required value="<?= htmlspecialchars($event->name) ?>">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Current Image</label><br>
+                    <img
+                        src="<?= htmlspecialchars($event->avatar()->path()) ?>"
+                        alt="Current Event Image"
+                        class="img-fluid rounded"
+                        style="max-height: 200px; object-fit: cover;"
+                    >
+                </div>
+
+                <div class="mb-3 form-check">
+                    <input type="checkbox" class="form-check-input" id="removeImage" name="remove_avatar" value="1">
+                    <label class="form-check-label" for="removeImage">Remove current image</label>
+                </div>
+
+                <div class="mb-3">
+                    <label for="eventAvatar" class="form-label">Upload New Image</label>
+                    <input type="file" class="form-control" id="eventAvatar" name="avatar_name" accept=".png,.jpg,.jpeg,.gif">
+                    <div class="form-text">Supported formats: PNG, JPG, JPEG, GIF (max 2MB)</div>
                 </div>
             </div>
         </div>
 
         <div class="d-flex justify-content-center gap-2">
-            <button type="submit" class="btn btn-primary">Update Event</button>
+            <button id="submitEventAvatar" type="submit" class="btn btn-primary">Update Event</button>
         </div>
     </form>
 </div>

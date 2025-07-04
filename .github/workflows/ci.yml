@@ -48,6 +48,9 @@ jobs:
       - name: Composer install
         run: ./run composer install
 
+      - name: Setup Uploads assets permissions
+        run: sudo chown -R www-data:www-data public/assets/uploads
+
       - name: Generate Codeception files
         run: ./run codecept build
 
@@ -59,6 +62,7 @@ jobs:
 
       - name: PHPUnit Acceptance test
         run: ./run test:browser
+
 
   code_quality:
     name: Code Quality Check
