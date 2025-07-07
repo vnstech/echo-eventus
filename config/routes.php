@@ -34,6 +34,8 @@ Route::middleware('auth')->group(function () {
             ->name('participants.remove');
 
         Route::middleware('event_owner')->group(function () {
+            Route::get('/events/{event_id}/members/check-email', [MembersController::class, 'checkEmail'])
+                ->name('members.check_email');
             Route::get('/events/{event_id}/members/new', [MembersController::class, 'new'])->name('members.new');
             Route::put('/events/{event_id}/members/add', [MembersController::class, 'add'])->name('members.add');
             Route::delete('/events/{event_id}/members/{user_id}/remove', [MembersController::class, 'remove'])
