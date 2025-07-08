@@ -117,4 +117,18 @@ class MembersController extends Controller
             $this->redirectTo(route('members.index', ['event_id' => $params['event_id']]));
         }
     }
+
+    public function checkEmail(Request $request): void
+    {
+        $email = $request->getParam('email');
+        $user = null;
+
+        if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $user = User::findBy(['email' => $email]);
+        }
+
+        $this->renderJson('user/events/members/check_email', [
+          'user' => $user
+        ]);
+    }
 }
