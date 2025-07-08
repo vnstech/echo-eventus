@@ -171,7 +171,7 @@ class EventCest extends BaseAcceptanceCest
         $newName = "Updated Event Name";
         $page->fillField('name', $newName);
         $page->executeJS("document.querySelector('button[type=submit]').click();");
-        $page->waitForElementNotVisible('form', 5); // opcional, ajuda com redireção
+        $page->waitForElementNotVisible('form', 5);
         $page->seeCurrentUrlEquals('/events');
         $page->see($newName);
     }
@@ -504,5 +504,105 @@ class EventCest extends BaseAcceptanceCest
 
         $page->executeJS('document.querySelector("#submitEventAvatar").click()');
         $page->see('Event updated successfully!');
+    }
+
+    public function testAjaxSuccessfully(AcceptanceTester $page): void
+    {
+        $user = new User([
+            'name' => 'User',
+            'email' => 'user@example.com',
+            'password' => '123456',
+            'password_confirmation' => '123456',
+        ]);
+        $user->save();
+
+        $user2 = new User([
+            'name' => 'User2',
+            'email' => 'user2@example.com',
+            'password' => '123456',
+            'password_confirmation' => '123456',
+        ]);
+        $user2->save();
+
+        $event = new Event([
+            'name' => "Event With Avatar",
+            'start_date' => '2025-06-01T09:00',
+            'finish_date' => '2025-06-01T18:00',
+            'owner_id' => $user->id,
+            'status' => 'upcoming',
+            'description' => 'Event image test',
+            'location_name' => 'Test Location',
+            'address' => 'Test Address',
+            'category' => '',
+            'two_fa_check_attendance' => false,
+        ]);
+        $event->save();
+
+        $pivot = new UserEvent([
+            'user_id' => $user->id,
+            'event_id' => $event->id,
+        ]);
+        $pivot->save();
+
+        $page->login($user->email, $user->password);
+        $page->amOnPage("/events/{$event->id}/members/new");
+
+        $page->fillField('email', 'user2@example.com');
+
+        $page->waitForElementVisible('#check_email_btn', 5);
+        $page->click('#check_email_btn');
+
+        $page->waitForText('User2', 5);
+        $page->see('User2');
+    }
+
+    public function testAjaxUnsuccessfully(AcceptanceTester $page): void
+    {
+        $user = new User([
+            'name' => 'User',
+            'email' => 'user@example.com',
+            'password' => '123456',
+            'password_confirmation' => '123456',
+        ]);
+        $user->save();
+
+        $user2 = new User([
+            'name' => 'User2',
+            'email' => 'user2@example.com',
+            'password' => '123456',
+            'password_confirmation' => '123456',
+        ]);
+        $user2->save();
+
+        $event = new Event([
+            'name' => "Event With Avatar",
+            'start_date' => '2025-06-01T09:00',
+            'finish_date' => '2025-06-01T18:00',
+            'owner_id' => $user->id,
+            'status' => 'upcoming',
+            'description' => 'Event image test',
+            'location_name' => 'Test Location',
+            'address' => 'Test Address',
+            'category' => '',
+            'two_fa_check_attendance' => false,
+        ]);
+        $event->save();
+
+        $pivot = new UserEvent([
+            'user_id' => $user->id,
+            'event_id' => $event->id,
+        ]);
+        $pivot->save();
+
+        $page->login($user->email, $user->password);
+        $page->amOnPage("/events/{$event->id}/members/new");
+
+        $page->fillField('email', 'user4@example.com');
+
+        $page->waitForElementVisible('#check_email_btn', 5);
+        $page->click('#check_email_btn');
+
+        $page->waitForText('User not found or invalid email.', 5);
+        $page->see('User not found or invalid email.');
     }
 }
